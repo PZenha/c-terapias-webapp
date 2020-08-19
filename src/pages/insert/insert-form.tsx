@@ -1,34 +1,188 @@
-import React, { FC } from 'react'
-import { useFormik } from 'formik'
-import { TextField } from '@material-ui/core'
+import React, { FC, useState, SyntheticEvent } from 'react';
+import { Formik } from 'formik';
+import { TextField, Button, Container } from '@material-ui/core';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+import Snackbar from '@material-ui/core/Snackbar';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import './insert.scss';
 
 const ClientForm: FC = () => {
+  const [open, setOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [success, setSuccess] = useState<
+    'success' | 'info' | 'warning' | 'error'
+  >('success');
 
-    const formik = useFormik({
-        initialValues: {
-            name: '',
-            age: '',
-            gender: 'MALE',
-            dob: '',
-            email: '',
-            phone: '',
-            address: {
+  function Alert(props: AlertProps) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event?: SyntheticEvent, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
+  return (
+    <>
+      <Container fixed>
+        <div className="formInput">
+          <Formik
+            initialValues={{
+              name: '',
+              age: '',
+              gender: 'MALE',
+              dob: '',
+              email: '',
+              phone: '',
+              address: {
                 city: '',
                 zipcode: '',
-                street: ''
-            },
-            advidedBy: '',
-            observation: ''
-        },
-        onSubmit: () => console.log("waa")
-    })
-    return (
-        <>
-            <div>
-                <TextField id='outlined-basic' label='Nome' variant='outlined' />
-            </div>
-        </>
-    )
-}
+                street: '',
+              },
+              advidedBy: '',
+              observation: '',
+            }}
+            onSubmit={(values, { setSubmitting }) => {
+              setSubmitting(true);
+              console.log(values);
+              setSuccess('success');
+              setSuccessMessage('Novo paciente adicionado com sucesso!');
+              setSubmitting(false);
+            }}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              isSubmitting,
+            }) => (
+              <form onSubmit={handleSubmit}>
+                <TextField
+                  name="name"
+                  value={values.name}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  id="name"
+                  label="Nome"
+                  variant="outlined"
+                />
+                <TextField
+                  name="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  id="email"
+                  label="Email"
+                  variant="outlined"
+                />
+                <TextField
+                  name="phone"
+                  value={values.phone}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  id="telemovel"
+                  label="Telemovel"
+                  variant="outlined"
+                />
+                <TextField
+                  name="dob"
+                  value={values.dob}
+                  onChange={handleChange}
+                  id="date"
+                  label="Data de Nascimento"
+                  type="date"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  variant="outlined"
+                />
+                <TextField
+                  name="address.street"
+                  value={values.address.street}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  id="street"
+                  label="Morada"
+                  variant="outlined"
+                />
+                <TextField
+                  name="address.zipcode"
+                  value={values.address.zipcode}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  id="zipcode"
+                  label="Codigo Postal"
+                  variant="outlined"
+                />
+                <TextField
+                  name="address.city"
+                  value={values.address.city}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  id="city"
+                  label="Cidade"
+                  variant="outlined"
+                />
+                <TextField
+                  name="advidedBy"
+                  value={values.advidedBy}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  id="advisedBy"
+                  label="Quem recomendou"
+                  variant="outlined"
+                />
+                <TextField
+                  multiline
+                  name="observation"
+                  value={values.observation}
+                  rows={4}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  id="observation"
+                  label="Observação"
+                  variant="outlined"
+                />
 
-export default ClientForm
+                <div className="submitButton">
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    startIcon={<CloudUploadIcon />}
+                    onClick={handleClick}
+                  >
+                    Adicionar
+                  </Button>
+                  <Snackbar
+                    open={open}
+                    autoHideDuration={6000}
+                    onClose={handleClose}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'left',
+                    }}
+                  >
+                    <Alert onClose={handleClose} severity={success}>
+                      {successMessage}
+                    </Alert>
+                  </Snackbar>
+                </div>
+              </form>
+            )}
+          </Formik>
+        </div>
+      </Container>
+    </>
+  );
+};
+
+export default ClientForm;
