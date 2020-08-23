@@ -4,6 +4,7 @@ import { TextField, Button, Container } from '@material-ui/core';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import { MutationAddNewClient } from '../../graphql/mutations/add-client';
 import './insert.scss';
 
 const ClientForm: FC = () => {
@@ -34,9 +35,8 @@ const ClientForm: FC = () => {
           <Formik
             initialValues={{
               name: '',
-              age: '',
-              gender: 'MALE',
-              dob: '',
+              gender: 'MALE' as const,
+              dob: new Date(),
               email: '',
               phone: '',
               address: {
@@ -44,12 +44,13 @@ const ClientForm: FC = () => {
                 zipcode: '',
                 street: '',
               },
-              advidedBy: '',
-              observation: '',
+              advisedBy: '',
+              //observation: '',
             }}
-            onSubmit={(values, { setSubmitting }) => {
+            onSubmit={async (values, { setSubmitting }) => {
               setSubmitting(true);
               console.log(values);
+              await MutationAddNewClient(values);
               setSuccess('success');
               setSuccessMessage('Novo paciente adicionado com sucesso!');
               setSubmitting(false);
@@ -133,14 +134,14 @@ const ClientForm: FC = () => {
                 />
                 <TextField
                   name="advidedBy"
-                  value={values.advidedBy}
+                  value={values.advisedBy}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   id="advisedBy"
                   label="Quem recomendou"
                   variant="outlined"
                 />
-                <TextField
+                {/* <TextField
                   multiline
                   name="observation"
                   value={values.observation}
@@ -150,7 +151,7 @@ const ClientForm: FC = () => {
                   id="observation"
                   label="Observação"
                   variant="outlined"
-                />
+               /> */}
 
                 <div className="submitButton">
                   <Button
