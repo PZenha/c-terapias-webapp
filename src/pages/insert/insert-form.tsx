@@ -45,7 +45,7 @@ const ClientForm: FC = () => {
                 street: '',
               },
               advisedBy: '',
-              //observation: '',
+              observation: '',
             }}
             onSubmit={async (values, { setSubmitting }) => {
               setSubmitting(true);
@@ -141,7 +141,7 @@ const ClientForm: FC = () => {
                   label="Quem recomendou"
                   variant="outlined"
                 />
-                {/* <TextField
+                <TextField
                   multiline
                   name="observation"
                   value={values.observation}
@@ -151,7 +151,7 @@ const ClientForm: FC = () => {
                   id="observation"
                   label="Observação"
                   variant="outlined"
-               /> */}
+                />
 
                 <div className="submitButton">
                   <Button

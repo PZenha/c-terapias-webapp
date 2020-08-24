@@ -15,10 +15,12 @@ interface IClient {
   };
   created_at?: Date;
   advisedBy?: string;
+  observation?: string;
 }
 
 interface IClientVariables {
   client: IClient;
+  observation: string;
 }
 
 export const ADD_CLIENT = gql`
@@ -32,6 +34,7 @@ export const ADD_CLIENT = gql`
 export async function MutationAddNewClient(values: IClient) {
   const client: IClientVariables = {
     client: values,
+    observation: values.observation!,
   };
   console.log(JSON.stringify(client, null, 2));
 
