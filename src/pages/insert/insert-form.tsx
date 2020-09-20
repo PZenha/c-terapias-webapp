@@ -52,7 +52,9 @@ const ClientForm: FC = () => {
               console.log(values);
               await MutationAddNewClient(values);
               setSuccess('success');
-              setSuccessMessage('Novo paciente adicionado com sucesso!');
+              setSuccessMessage(
+                'Novo paciente adicionado com sucesso!',
+              );
               setSubmitting(false);
             }}
           >
@@ -133,7 +135,7 @@ const ClientForm: FC = () => {
                   variant="outlined"
                 />
                 <TextField
-                  name="advidedBy"
+                  name="advisedBy"
                   value={values.advisedBy}
                   onChange={handleChange}
                   onBlur={handleBlur}

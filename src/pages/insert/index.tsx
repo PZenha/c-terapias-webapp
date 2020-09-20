@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import ClientForm from './insert-form';
-import MainLayout from '../../layout/main-layout';
+import ClientForm from "./insert-form";
+import MainLayout from "../../layout/main-layout";
 
 const InsertClient: FC = () => {
   return (
