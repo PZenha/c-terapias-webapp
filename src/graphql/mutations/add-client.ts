@@ -1,22 +1,8 @@
 import { useMutation, gql } from '@apollo/client'
 import { useState } from 'react'
 import { client as ApolloClient } from '../client'
+import { IClient } from '../../types'
 
-export interface IClient {
-  name?: string
-  dob?: Date
-  email?: string
-  phone?: string
-  gender: 'MALE' | 'FEMALE'
-  address?: {
-    city?: string
-    zipcode?: string
-    street?: string
-  }
-  created_at?: Date
-  advisedBy?: string
-  observation?: string
-}
 
 interface IClientVariables {
   client: IClient

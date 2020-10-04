@@ -1,10 +1,11 @@
 import { client as ApolloClient } from '../client'
 import { gql } from '@apollo/client'
-import { IClient } from '../mutations/add-client'
+import { IClient } from '../../types'
 
 export const SEARCH_CLIENT = gql`
   query searchClients($name: String) {
     searchClients(name: $name) {
+      _id
       name
       dob
       email
@@ -16,7 +17,6 @@ export const SEARCH_CLIENT = gql`
         street
       }
       advisedBy
-      created_at
     }
   }
 `

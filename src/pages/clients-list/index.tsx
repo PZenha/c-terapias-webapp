@@ -1,25 +1,24 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { TextField, Button } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search'
 import MaterialTable, { Column } from 'material-table'
 import MainLayout from '../../layout/main-layout'
 import { Formik } from 'formik'
-import { Search } from '@material-ui/icons'
 import {
   getClient,
   ISearchRes,
 } from '../../graphql/queries/search-client'
-import { IClient } from '../../graphql/mutations/add-client'
+import { IClient } from '../../types'
+import { MutationUpdateClient } from '../../graphql/mutations/update-client'
+import './list.scss'
 
 interface IProps {
   data: ISearchRes
 }
 
 interface TableState {
-  columns: Array<Column<IClient>>
   data: IClient[]
 }
-
 export const SearchClients: FC = () => {
   const [data, setData] = useState<ISearchRes>()
   return (
@@ -31,9 +30,7 @@ export const SearchClients: FC = () => {
           }}
           onSubmit={async (values, { setSubmitting }) => {
             const res = await getClient(values.name)
-            console.log(JSON.stringify(res.data, null, 2))
             setData(res.data)
-            console.log(values.name)
           }}
         >
           {({
@@ -46,6 +43,8 @@ export const SearchClients: FC = () => {
             isSubmitting,
           }) => (
             <form onSubmit={handleSubmit}>
+              <div className="search-wraper">
+              <div className="text-input">
               <TextField
                 name="name"
                 value={values.name}
@@ -54,8 +53,10 @@ export const SearchClients: FC = () => {
                 id="name"
                 label="Nome"
                 variant="outlined"
+                style={{width: '100%'}}
               />
-              <div className="submit-buttin">
+               </div>
+              <div className="submit-button">
                 <Button
                   type="submit"
                   variant="contained"
@@ -63,6 +64,7 @@ export const SearchClients: FC = () => {
                 >
                   <SearchIcon />
                 </Button>
+              </div>
               </div>
             </form>
           )}
@@ -75,36 +77,42 @@ export const SearchClients: FC = () => {
 }
 
 const Table: FC<IProps> = (props: { data: ISearchRes }) => {
-  const editableData = props.data.searchClients.map((o) => ({ ...o }))
-  const [state, setState] = useState<TableState>({
-    columns: [
-      { title: 'Nome', field: 'name' },
-      { title: 'Data de Nascimento', field: 'dob', type: 'date' },
-      { title: 'email', field: 'email' },
-      { title: 'Contacto', field: 'phone' },
-      { title: 'Género', field: 'gender' },
-      { title: 'Cidade', field: 'address.city' },
-      { title: 'Morada', field: 'address.street' },
-      { title: 'Codigo postal', field: 'address.zipcode' },
-      { title: 'Recomendação', field: 'advisedBy' },
-    ],
-    data: editableData,
-  })
-
+  const editableData = props.data.searchClients.map((client) => ({ ...client }))
+  const [state, setState] = useState<TableState>({data: editableData})
+ 
+  useEffect(() => {
+    setState({data: editableData})
+  },[editableData.length])
+  console.log(`state: ${JSON.stringify(state,null,2)}`)
   return (
     <>
+    <div className='table'>
       <MaterialTable
         title="Tabela de clientes"
-        columns={state.columns}
+        columns={[
+          { title: 'Nome', field: 'name' },
+          { title: 'Data de Nascimento', field: 'dob', type: 'date' },
+          { title: 'e-mail', field: 'email' },
+          { title: 'Contacto', field: 'phone' },
+          { title: 'Cidade', field: 'address.city' },
+          { title: 'Morada', field: 'address.street' },
+          { title: 'Codigo postal', field: 'address.zipcode' },
+          { title: 'Recomendação', field: 'advisedBy' },
+        ]}
         data={state.data}
         editable={{
           onRowUpdate: (newData, oldData) =>
             new Promise((resolve) => {
-              setTimeout(() => {
+              setTimeout(async () => {
                 resolve()
                 if (oldData) {
+                  console.log(
+                    `newData: ${JSON.stringify(newData, null, 2)}`,
+                  )
+                  await MutationUpdateClient(newData)
                   setState((prevState) => {
                     const data = [...prevState.data]
+                    console.log(`data: ${JSON.stringify(data,null,2)}`)
                     data[data.indexOf(oldData)] = newData
                     return { ...prevState, data }
                   })
@@ -124,6 +132,7 @@ const Table: FC<IProps> = (props: { data: ISearchRes }) => {
             }),
         }}
       />
+      </div>
     </>
   )
 }
