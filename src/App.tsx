@@ -1,9 +1,13 @@
 import React from 'react';
-import Routes from './routes'
+import Routes from './routes';
+import { ApolloProvider } from '@apollo/client';
+import { client } from './graphql/client';
 
 function App() {
   return (
-    <Routes />
+    <ApolloProvider client={client}>
+      <Routes />
+    </ApolloProvider>
   );
 }
 

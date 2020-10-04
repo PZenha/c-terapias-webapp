@@ -1,0 +1,24 @@
+.table {
+    margin: 20px;
+}
+
+.search-wraper {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  
+}
+
+.text-input {   
+    display: flex;
+   
+    width: 30%;
+    align-items: center;
+    padding-top: 17px;;
+}
+
+.submit-button {
+    padding-left: 10px;
+}
