@@ -24,10 +24,13 @@ export async function MutationAddNewClient(values: IClient) {
   }
   console.log(JSON.stringify(client, null, 2))
 
-  const res = await ApolloClient.mutate<IClient, IClientVariables>({
-    mutation: ADD_CLIENT,
-    variables: client,
-  })
-
-  console.log(JSON.stringify(res, null, 2))
+  try {
+    const res = await ApolloClient.mutate<IClient, IClientVariables>({
+      mutation: ADD_CLIENT,
+      variables: client,
+    })
+    return res
+  } catch (err) {
+    return err
+  }
 }
