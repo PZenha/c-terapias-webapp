@@ -78,6 +78,7 @@ const ClientForm: FC = () => {
               isSubmitting,
             }) => (
               <form onSubmit={handleSubmit}>
+                <div className="input-block1">
                 <TextField
                   name="name"
                   value={values.name}
@@ -96,6 +97,8 @@ const ClientForm: FC = () => {
                   label="Email"
                   variant="outlined"
                 />
+                </div>
+                <div className="input-block2">
                 <TextField
                   name="phone"
                   value={values.phone}
@@ -117,6 +120,8 @@ const ClientForm: FC = () => {
                   }}
                   variant="outlined"
                 />
+                </div>
+                <div className="input-block3">
                 <TextField
                   name="address.street"
                   value={values.address.street}
@@ -135,6 +140,8 @@ const ClientForm: FC = () => {
                   label="Codigo Postal"
                   variant="outlined"
                 />
+                </div>
+                <div className="input-block4">
                 <TextField
                   name="address.city"
                   value={values.address.city}
@@ -153,6 +160,8 @@ const ClientForm: FC = () => {
                   label="Quem recomendou"
                   variant="outlined"
                 />
+                </div>
+                <div className="input-block5">
                 <TextField
                   multiline
                   name="observation"
@@ -164,7 +173,7 @@ const ClientForm: FC = () => {
                   label="Observação"
                   variant="outlined"
                 />
-
+                </div>
                 <div className="submitButton">
                   <Button
                     type="submit"
