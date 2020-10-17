@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState, SyntheticEvent } from 'react'
 import { TextField, Button } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search'
 import MaterialTable, { Column } from 'material-table'
@@ -10,10 +10,19 @@ import {
 } from '../../graphql/queries/search-client'
 import { IClient } from '../../types'
 import { MutationUpdateClient } from '../../graphql/mutations/update-client'
+import { MutationDeleteClient } from '../../graphql/mutations/delete-client'
+import Snackbar from '@material-ui/core/Snackbar'
+import Alert from '@material-ui/lab/Alert'
 import './list.scss'
 
 interface IProps {
   data: ISearchRes
+  onProcess: (action: ICallbackProps) => void
+}
+
+interface ICallbackProps {
+  success: 'success' | 'info' | 'warning' | 'error'
+  successMessage: string
 }
 
 interface TableState {
@@ -21,6 +30,23 @@ interface TableState {
 }
 export const SearchClients: FC = () => {
   const [data, setData] = useState<ISearchRes>()
+  const [open, setOpen] = useState(false)
+  const [successMessage, setSuccessMessage] = useState<string>('')
+  const [success, setSuccess] = useState<
+    'success' | 'info' | 'warning' | 'error'
+  >('success')
+
+  const handleClick = () => {
+    setOpen(true)
+  }
+
+  const handleClose = (event?: SyntheticEvent, reason?: string) => {
+    if (reason === 'clickaway') {
+      return
+    }
+    setOpen(false)
+  }
+  
   return (
     <>
       <div className="search-input">
@@ -71,19 +97,37 @@ export const SearchClients: FC = () => {
         </Formik>
       </div>
 
-      {data && <Table data={data} />}
+      {data && <Table data={data} onProcess={(action)=> {
+        handleClick()
+        setSuccess(action.success)
+        setSuccessMessage(action.successMessage)
+      }} />}
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+      >
+        <Alert onClose={handleClose} severity={success}>
+          {successMessage}
+        </Alert>
+      </Snackbar>
     </>
   )
 }
 
-const Table: FC<IProps> = (props: { data: ISearchRes }) => {
+const Table: FC<IProps> = (props: { data: ISearchRes, onProcess: (action: ICallbackProps) => void }) => {
   const editableData = props.data.searchClients.map((client) => ({ ...client }))
   const [state, setState] = useState<TableState>({data: editableData})
+  
  
   useEffect(() => {
     setState({data: editableData})
-  },[editableData.length])
-  console.log(`state: ${JSON.stringify(state,null,2)}`)
+  },[editableData[0]._id])
+  
   return (
     <>
     <div className='table'>
@@ -106,10 +150,18 @@ const Table: FC<IProps> = (props: { data: ISearchRes }) => {
               setTimeout(async () => {
                 resolve()
                 if (oldData) {
-                  console.log(
-                    `newData: ${JSON.stringify(newData, null, 2)}`,
-                  )
-                  await MutationUpdateClient(newData)
+                  const res = await MutationUpdateClient(newData)
+                  if(res.errors){
+                    props.onProcess({
+                      success: 'error',
+                      successMessage: 'Algo de errado aconteceu!'
+                    })
+                    return
+                  }
+                  props.onProcess({
+                    success: 'success',
+                    successMessage: 'Cliente editado com sucesso!'
+                  })
                   setState((prevState) => {
                     const data = [...prevState.data]
                     console.log(`data: ${JSON.stringify(data,null,2)}`)
@@ -121,8 +173,21 @@ const Table: FC<IProps> = (props: { data: ISearchRes }) => {
             }),
           onRowDelete: (oldData) =>
             new Promise((resolve) => {
-              setTimeout(() => {
+              setTimeout(async () => {
                 resolve()
+                console.log(oldData.name)
+                const res = await MutationDeleteClient(oldData._id!)
+                if(res.errors){
+                  props.onProcess({
+                    success: 'error',
+                    successMessage: 'Algo de errado aconteceu!'
+                  })
+                  return
+                }
+                props.onProcess({
+                  success: 'success',
+                  successMessage: 'Cliente removido com sucesso!'
+                })
                 setState((prevState) => {
                   const data = [...prevState.data]
                   data.splice(data.indexOf(oldData), 1)

@@ -1,33 +1,29 @@
-import React, { FC, useState, SyntheticEvent } from 'react';
-import { Formik } from 'formik';
-import { TextField, Button, Container } from '@material-ui/core';
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
-import Snackbar from '@material-ui/core/Snackbar';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import { MutationAddNewClient } from '../../graphql/mutations/add-client';
-import './insert.scss';
+import React, { FC, useState, SyntheticEvent } from 'react'
+import { Formik } from 'formik'
+import { TextField, Button, Container } from '@material-ui/core'
+import Alert, { AlertProps } from '@material-ui/lab/Alert'
+import Snackbar from '@material-ui/core/Snackbar'
+import CloudUploadIcon from '@material-ui/icons/CloudUpload'
+import { MutationAddNewClient } from '../../graphql/mutations/add-client'
+import './insert.scss'
 
 const ClientForm: FC = () => {
-  const [open, setOpen] = useState(false);
-  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [open, setOpen] = useState(false)
+  const [successMessage, setSuccessMessage] = useState<string>('')
   const [success, setSuccess] = useState<
     'success' | 'info' | 'warning' | 'error'
-  >('success');
-
-  function Alert(props: AlertProps) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-  }
+  >('success')
 
   const handleClick = () => {
-    setOpen(true);
-  };
+    setOpen(true)
+  }
 
   const handleClose = (event?: SyntheticEvent, reason?: string) => {
     if (reason === 'clickaway') {
-      return;
+      return
     }
-    setOpen(false);
-  };
+    setOpen(false)
+  }
   return (
     <>
       <Container fixed>
@@ -48,14 +44,28 @@ const ClientForm: FC = () => {
               observation: '',
             }}
             onSubmit={async (values, { setSubmitting }) => {
-              setSubmitting(true);
-              console.log(values);
-              await MutationAddNewClient(values);
-              setSuccess('success');
-              setSuccessMessage(
-                'Novo paciente adicionado com sucesso!',
-              );
-              setSubmitting(false);
+              setSubmitting(true)
+              console.log(values)
+              const res = await MutationAddNewClient(values)
+              console.log(
+                `responseee: ${JSON.stringify(res, null, 2)}`,
+              )
+              if (res.errors || !res) {
+                setSuccess('error')
+                setSuccessMessage('Erro ao adicionar cliente!')
+              } else if (res.message === 'Failed to fetch') {
+                setSuccess('warning')
+                setSuccessMessage(
+                  'Falha a comunicar com a base de dados!',
+                )
+              } else if (res.data) {
+                setSuccess('success')
+                setSuccessMessage(
+                  'Novo paciente adicionado com sucesso!',
+                )
+              }
+
+              setSubmitting(false)
             }}
           >
             {({
@@ -185,7 +195,7 @@ const ClientForm: FC = () => {
         </div>
       </Container>
     </>
-  );
-};
+  )
+}
 
-export default ClientForm;
+export default ClientForm
