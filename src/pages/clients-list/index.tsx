@@ -126,7 +126,7 @@ const Table: FC<IProps> = (props: { data: ISearchRes, onProcess: (action: ICallb
  
   useEffect(() => {
     setState({data: editableData})
-  },[editableData[0]._id])
+  },[editableData[0]?._id])
   
   return (
     <>

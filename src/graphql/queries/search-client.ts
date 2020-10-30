@@ -1,6 +1,6 @@
 import { client as ApolloClient } from '../client'
 import { gql } from '@apollo/client'
-import { IClient } from '../../types'
+import { IClient, ISearchClientsQueryResult } from '../../types'
 
 export const SEARCH_CLIENT = gql`
   query searchClients($name: String) {
@@ -17,6 +17,14 @@ export const SEARCH_CLIENT = gql`
         street
       }
       advisedBy
+      observations_id
+      observations{
+        _id
+        observations{
+          created_at
+          description
+        }
+      }
     }
   }
 `
@@ -26,7 +34,7 @@ interface searchInput {
 }
 
 export interface ISearchRes {
-  searchClients: IClient[]
+  searchClients: ISearchClientsQueryResult[]
 }
 
 export async function getClient(name: string) {
