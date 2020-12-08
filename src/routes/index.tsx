@@ -6,6 +6,7 @@ const Routes = () => (
         <Switch>
             <Route path="/" exact component={require('../pages/insert').default} />
             <Route path="/clients-list" exact component={require('../pages/clients-list').default} />
+            <Route path="/client/:id" exact component={require('../pages/client-observations').default} />
         </Switch>
     </Router>
 )
