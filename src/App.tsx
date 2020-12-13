@@ -5,9 +5,11 @@ import { client } from './graphql/client';
 
 function App() {
   return (
-    <ApolloProvider client={client}>
-      <Routes />
-    </ApolloProvider>
+    <div className="App">
+      <ApolloProvider client={client}>
+        <Routes />
+      </ApolloProvider>
+    </div>
   );
 }
 

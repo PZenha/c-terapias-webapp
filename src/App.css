@@ -1,38 +1,64 @@
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  width: 100vw;
+  height: 100vh;
+}
+
+body, html {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+a{text-decoration:none}
+
+
+.SideBar {
+  width: 250px;
+  max-width: 250px;
+  padding: 0;
+  margin: 0;
+  background-color:#36454f;
+  border: 1px solid blue;
+  display: inline-block;
+}
+
+.SideBarList {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.SideBarList .SideBarRow {
+  height: 50px;
+  width: 100%;
+  list-style-type: none;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+  color: white
 }
 
-.App-link {
-  color: #61dafb;
+.SideBarList .SideBarRow:hover {
+  cursor: pointer;
+  background-color:#536878;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.SideBarRow #icon {
+  flex: 30%;
+ 
+}
+
+.SideBarRow #title {
+  flex: 70%;
+}
+
+.SideBarList #active {
+  background-color: #536878;
 }
