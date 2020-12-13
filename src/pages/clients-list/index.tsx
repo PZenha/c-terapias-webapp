@@ -8,11 +8,12 @@ import {
   getClient,
   ISearchRes,
 } from '../../graphql/queries/search-client'
-import { IClient } from '../../types'
+import { IClient, ISearchClientsQueryResult } from '../../types'
 import { MutationUpdateClient } from '../../graphql/mutations/update-client'
 import { MutationDeleteClient } from '../../graphql/mutations/delete-client'
 import Snackbar from '@material-ui/core/Snackbar'
 import Alert from '@material-ui/lab/Alert'
+import { Link } from 'react-router-dom' 
 import './list.scss'
 
 interface IProps {
@@ -26,7 +27,7 @@ interface ICallbackProps {
 }
 
 interface TableState {
-  data: IClient[]
+  data: ISearchClientsQueryResult[]
 }
 export const SearchClients: FC = () => {
   const [data, setData] = useState<ISearchRes>()
@@ -97,11 +98,20 @@ export const SearchClients: FC = () => {
         </Formik>
       </div>
 
-      {data && <Table data={data} onProcess={(action)=> {
+      {data && ( <>
+      <Table data={data} onProcess={(action)=> {
         handleClick()
         setSuccess(action.success)
         setSuccessMessage(action.successMessage)
-      }} />}
+      }} />
+      <ul>{data.searchClients.map( i => {
+        return <li>
+          <Link to={`client/${i.observations_id}`}>{i.observations._id}</Link>
+          </li>
+      })}</ul>
+      </>
+      )
+      }
       <Snackbar
         open={open}
         autoHideDuration={6000}
@@ -126,7 +136,7 @@ const Table: FC<IProps> = (props: { data: ISearchRes, onProcess: (action: ICallb
  
   useEffect(() => {
     setState({data: editableData})
-  },[editableData[0]._id])
+  },[editableData[0]?._id])
   
   return (
     <>
@@ -142,6 +152,7 @@ const Table: FC<IProps> = (props: { data: ISearchRes, onProcess: (action: ICallb
           { title: 'Morada', field: 'address.street' },
           { title: 'Codigo postal', field: 'address.zipcode' },
           { title: 'Recomendação', field: 'advisedBy' },
+          { title: 'Observações', field: 'observations.observations[0].description'}
         ]}
         data={state.data}
         editable={{
@@ -196,6 +207,10 @@ const Table: FC<IProps> = (props: { data: ISearchRes, onProcess: (action: ICallb
               }, 600)
             }),
         }}
+        onRowClick = {(event,data) => (
+          <Link to={`/client/${data?._id}`} >
+          </Link>
+        )}
       />
       </div>
     </>

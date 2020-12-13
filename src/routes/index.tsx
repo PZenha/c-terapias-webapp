@@ -8,6 +8,7 @@ const Routes = () => (
             <Route path="/clients" exact component={require('../pages/clients-list').default} />
             <Route path="/insert" exact component={require('../pages/insert').default}/>
             <Route path="/schedule" exact component={require('../pages/schedule').default}/>
+             <Route path="/client/:id" exact component={require('../pages/client-observations').default} />
         </Switch>
     </Router>
 )
