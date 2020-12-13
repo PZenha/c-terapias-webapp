@@ -1,5 +1,21 @@
 $backgroundColor: #fafafa;
 
+.formContainer {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.formInput {
+  width: 100%;
+  margin: 0;
+  position: absolute;
+  top: 40%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+
 form {
   display: flex;
   justify-content: center;
@@ -24,11 +40,7 @@ html {
   background-color: $backgroundColor;
 }
 
-.MuiContainer-root {
-  background: white;
-  padding-bottom: 40px;
-  padding-top: 40px;
-}
+
 
 .input-block1 {
   display: flex;
