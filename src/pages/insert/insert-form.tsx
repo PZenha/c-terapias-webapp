@@ -26,7 +26,7 @@ const ClientForm: FC = () => {
   }
   return (
     <>
-      <Container fixed>
+     
         <div className="formInput">
           <Formik
             initialValues={{
@@ -202,7 +202,7 @@ const ClientForm: FC = () => {
             )}
           </Formik>
         </div>
-      </Container>
+  
     </>
   )
 }
