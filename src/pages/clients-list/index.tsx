@@ -1,7 +1,6 @@
 import React, { FC, useEffect, useState, SyntheticEvent } from 'react'
 import { TextField, Button } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search'
-import MaterialTable, { Column } from 'material-table'
 import MainLayout from '../../layout/main-layout'
 import { Formik } from 'formik'
 import {
@@ -14,7 +13,44 @@ import { MutationDeleteClient } from '../../graphql/mutations/delete-client'
 import Snackbar from '@material-ui/core/Snackbar'
 import Alert from '@material-ui/lab/Alert'
 import { Link } from 'react-router-dom' 
+import { GenerateTable, ITableProps } from './components/table'
 import './list.scss'
+
+const mockedData = 
+[
+ {
+        name: 'Pedro Zenha',
+        dob: new Date,
+        phone: '915828955',
+        email: 'pedrozenha12@gmail.com',
+        created_at: new Date(),
+        address: {
+            city: 'Gaia',
+            zipcode: '4415',
+            street: '25 de Abril'
+        },
+        advisedBy: 'Por mim',
+        observations_count: 4
+        
+    },
+     {
+        name: 'Pedro Zenha',
+        dob: new Date,
+        phone: '915828955',
+        email: 'pedrozenha12@gmail.com',
+        created_at: new Date(),
+        address: {
+            city: 'Gaia',
+            zipcode: '4415',
+            street: '25 de Abril'
+        },
+        advisedBy: 'Por mim',
+        observations_count: 4
+        
+    }
+]
+   
+
 
 interface IProps {
   data: ISearchRes
@@ -50,6 +86,7 @@ export const SearchClients: FC = () => {
   
   return (
     <>
+    <div style={{width:'100%'}}>
       <div className="search-input">
         <Formik
           initialValues={{
@@ -98,123 +135,15 @@ export const SearchClients: FC = () => {
         </Formik>
       </div>
 
-      {data && ( <>
-      <Table data={data} onProcess={(action)=> {
-        handleClick()
-        setSuccess(action.success)
-        setSuccessMessage(action.successMessage)
-      }} />
-      <ul>{data.searchClients.map( i => {
-        return <li>
-          <Link to={`client/${i.observations_id}`}>{i.observations._id}</Link>
-          </li>
-      })}</ul>
-      </>
-      )
-      }
-      <Snackbar
-        open={open}
-        autoHideDuration={6000}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-      >
-        <Alert onClose={handleClose} severity={success}>
-          {successMessage}
-        </Alert>
-      </Snackbar>
-    </>
-  )
-}
-
-const Table: FC<IProps> = (props: { data: ISearchRes, onProcess: (action: ICallbackProps) => void }) => {
-  const editableData = props.data.searchClients.map((client) => ({ ...client }))
-  const [state, setState] = useState<TableState>({data: editableData})
-  
- 
-  useEffect(() => {
-    setState({data: editableData})
-  },[editableData[0]?._id])
-  
-  return (
-    <>
-    <div className='table'>
-      <MaterialTable
-        title="Tabela de clientes"
-        columns={[
-          { title: 'Nome', field: 'name' },
-          { title: 'Data de Nascimento', field: 'dob', type: 'date' },
-          { title: 'e-mail', field: 'email' },
-          { title: 'Contacto', field: 'phone' },
-          { title: 'Cidade', field: 'address.city' },
-          { title: 'Morada', field: 'address.street' },
-          { title: 'Codigo postal', field: 'address.zipcode' },
-          { title: 'Recomendação', field: 'advisedBy' },
-          { title: 'Observações', field: 'observations.observations[0].description'}
-        ]}
-        data={state.data}
-        editable={{
-          onRowUpdate: (newData, oldData) =>
-            new Promise((resolve) => {
-              setTimeout(async () => {
-                resolve()
-                if (oldData) {
-                  const res = await MutationUpdateClient(newData)
-                  if(res.errors){
-                    props.onProcess({
-                      success: 'error',
-                      successMessage: 'Algo de errado aconteceu!'
-                    })
-                    return
-                  }
-                  props.onProcess({
-                    success: 'success',
-                    successMessage: 'Cliente editado com sucesso!'
-                  })
-                  setState((prevState) => {
-                    const data = [...prevState.data]
-                    console.log(`data: ${JSON.stringify(data,null,2)}`)
-                    data[data.indexOf(oldData)] = newData
-                    return { ...prevState, data }
-                  })
-                }
-              }, 600)
-            }),
-          onRowDelete: (oldData) =>
-            new Promise((resolve) => {
-              setTimeout(async () => {
-                resolve()
-                console.log(oldData.name)
-                const res = await MutationDeleteClient(oldData._id!)
-                if(res.errors){
-                  props.onProcess({
-                    success: 'error',
-                    successMessage: 'Algo de errado aconteceu!'
-                  })
-                  return
-                }
-                props.onProcess({
-                  success: 'success',
-                  successMessage: 'Cliente removido com sucesso!'
-                })
-                setState((prevState) => {
-                  const data = [...prevState.data]
-                  data.splice(data.indexOf(oldData), 1)
-                  return { ...prevState, data }
-                })
-              }, 600)
-            }),
-        }}
-        onRowClick = {(event,data) => (
-          <Link to={`/client/${data?._id}`} >
-          </Link>
-        )}
-      />
+      {true && ( <>
+      <div style={{padding:'0px',margin:10, maxWidth:'100%', overflow:'auto', border: '1px solid red'}}>
+      <GenerateTable data={mockedData}/>
       </div>
+      </>
+    )}
+    </div>
     </>
-  )
-}
+)
+      }
 
 export default MainLayout(SearchClients)
