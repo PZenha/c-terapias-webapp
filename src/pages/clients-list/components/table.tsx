@@ -1,6 +1,7 @@
 import React, { Children, FC, useState } from 'react'
 import moment from 'moment'
 import TableModal, { SimpleModal } from './table-modal'
+import { IClientData } from '../../../types'
 import './table.scss'
 
 
@@ -9,7 +10,7 @@ export interface ITableProps {
     data:{
  name: string
         dob: Date
-        phone?: string
+        phone: string
         email: string
         address: {
             city: string
@@ -61,6 +62,7 @@ export const RowCell: FC = ({children}) => (
 export const GenerateTable: FC<ITableProps> = (props: ITableProps) => {
     //const { name, dob, email, phone, created_at, address, advisedBy, observations_count} = props.data
     const [openModal, setOpenModal] = useState(false)
+    const [selectedData, setSelectedData] = useState<IClientData | undefined>(undefined)
     const twenty = moment().subtract(20, 'years')
     return (
         <>
@@ -75,7 +77,10 @@ export const GenerateTable: FC<ITableProps> = (props: ITableProps) => {
               <HeaderColumn>Observações</HeaderColumn>
           </TableHeader>
           {props.data.map( data => (
-            <Row data={data} onProceed={() => setOpenModal(true)}>
+            <Row data={data} onProceed={() => {
+                setOpenModal(true)
+                setSelectedData(data)
+                }}>
               <RowCell>{data.name}</RowCell>
               <RowCell>{`${moment(data.dob).format('DD/MM/YYYY')} - ${moment().diff(twenty, 'years')}`}</RowCell>
               <RowCell>{data.address.city}</RowCell>
@@ -87,7 +92,7 @@ export const GenerateTable: FC<ITableProps> = (props: ITableProps) => {
           ))}
           
       </Table>
-      <TableModal data={props.data} openModal={openModal} handleClose={() => setOpenModal(false)}/>
+      <TableModal data={selectedData} openModal={openModal} handleClose={() => setOpenModal(false)}/>
       {/* <SimpleModal /> */}
       </>
     )

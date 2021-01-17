@@ -55,3 +55,18 @@ export interface ISearchClientsQueryResult {
     }
   }
 }
+
+
+export interface IClientData {
+  name: string
+  dob: Date
+  email: string
+  phone: string
+  address: {
+    city: string
+    zipcode: string
+    street: string
+  }
+  advisedBy: string
+  observations_count: number
+}
