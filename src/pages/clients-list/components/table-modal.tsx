@@ -1,20 +1,21 @@
-import React, { FC } from 'react'
-import { ITableProps } from './table'
+import React, { FC, useState } from 'react'
+//import { ITableProps } from './table'
 import Modal from '@material-ui/core/Modal';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { TextField, Dialog, DialogContent, Button } from '@material-ui/core'
+import { TextField, Dialog, DialogContent, Button, Switch } from '@material-ui/core'
 import EditIcon from '@material-ui/icons/Edit';
 import { Formik } from 'formik'
-import { IClientData } from '../../../types'
+import { ISearchClientsQueryResult } from '../../../types'
 import './table.scss'
 
 interface IModalProps  {
-    data?: IClientData
+    data?: ISearchClientsQueryResult
     openModal: boolean
     handleClose: () => void
 }
 
 const TableModal: FC<IModalProps> = (props: IModalProps) => {
+  const [readOnly, setReadOnly] = useState<boolean>(true)
   const { data } = props
     return (
         <div>
@@ -50,9 +51,15 @@ const TableModal: FC<IModalProps> = (props: IModalProps) => {
           }) => (
               <>
               <form onSubmit={handleSubmit}>
+                <div className="toggle-edit"> 
+                  <Switch checked={!readOnly} onChange={() => setReadOnly(!readOnly)} color="primary"/>
+                </div>
                 
                   <TextField
                     name="name"
+                    inputProps={{
+                      readOnly
+                    }}
                     value={values.name}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -63,6 +70,9 @@ const TableModal: FC<IModalProps> = (props: IModalProps) => {
                   />
                   <TextField
                   name="dob"
+                   inputProps={{
+                      readOnly
+                    }}
                   value={values.dob}
                   onChange={handleChange}
                   id="date"
@@ -76,6 +86,9 @@ const TableModal: FC<IModalProps> = (props: IModalProps) => {
           
                    <TextField
                     name="phone"
+                     inputProps={{
+                      readOnly
+                    }}
                     value={values.phone}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -86,6 +99,9 @@ const TableModal: FC<IModalProps> = (props: IModalProps) => {
                   />
                    <TextField
                     name="email"
+                     inputProps={{
+                      readOnly
+                    }}
                     value={values.email}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -96,6 +112,9 @@ const TableModal: FC<IModalProps> = (props: IModalProps) => {
                   />
                    <TextField
                     name="city"
+                     inputProps={{
+                      readOnly
+                    }}
                     value={values.city}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -106,6 +125,9 @@ const TableModal: FC<IModalProps> = (props: IModalProps) => {
                   />
                   <TextField
                     name="zipcode"
+                     inputProps={{
+                      readOnly
+                    }}
                     value={values.zipcode}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -116,6 +138,9 @@ const TableModal: FC<IModalProps> = (props: IModalProps) => {
                   />
                   <TextField
                     name="street"
+                     inputProps={{
+                      readOnly
+                    }}
                     value={values.street}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -126,6 +151,9 @@ const TableModal: FC<IModalProps> = (props: IModalProps) => {
                   />
                   <TextField
                     name="advisedBy"
+                     inputProps={{
+                      readOnly
+                    }}
                     value={values.advisedBy}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -136,6 +164,7 @@ const TableModal: FC<IModalProps> = (props: IModalProps) => {
                   />
                   <Button
                     type="submit"
+                    disabled={readOnly}
                     variant="contained"
                     color="primary"
                     startIcon={<EditIcon />}

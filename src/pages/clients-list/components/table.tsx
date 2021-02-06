@@ -2,27 +2,10 @@ import React, { Children, FC, useState } from 'react'
 import moment from 'moment'
 import TableModal, { SimpleModal } from './table-modal'
 import { IClientData } from '../../../types'
+import EditIcon from '@material-ui/icons/Edit';
+import { ISearchClientsQueryResult } from '../../../types'
 import './table.scss'
 
-
-
-export interface ITableProps {
-    data:{
- name: string
-        dob: Date
-        phone: string
-        email: string
-        address: {
-            city: string
-            zipcode: string
-            street: string
-        }  
-        created_at: Date
-        advisedBy: string
-        observations_count: number
-    }[]
-       
-}
 
 const Table: FC = ({children}) => {
 
@@ -36,9 +19,12 @@ const Table: FC = ({children}) => {
 }
 
 export const TableHeader: FC = ({children}) => (
-    <tr className='table-header'>
-        {children}
-    </tr>
+    <thead>
+        <tr className='table-header'>
+            {children}
+        </tr>
+    </thead>
+   
 )
 
 export const HeaderColumn: FC = ({children}) => (
@@ -47,25 +33,30 @@ export const HeaderColumn: FC = ({children}) => (
     </th>
 )
 
-export const Row: FC<{data: any, onProceed: () => void}> = ({children, data, onProceed}) => (
-    <tr className='row-style' onClick={() => onProceed()}>
+export const TableBody: FC = ({children}) => (
+    <tbody className="table-body">
+        {children}
+    </tbody>
+)
+
+export const Row: FC = ({children}) => (
+    <tr className='row-style'>
         {children}
     </tr>
 )
 
-export const RowCell: FC = ({children}) => (
-    <td className='row-cell-style'>
+export const RowCell: FC<{onProceed?: () => void}> = ({children, onProceed}) => (
+    <td className='row-cell-style' onClick={() => onProceed?.()}>
         {children}
     </td>
 )
 
-export const GenerateTable: FC<ITableProps> = (props: ITableProps) => {
-    //const { name, dob, email, phone, created_at, address, advisedBy, observations_count} = props.data
+export const GenerateTable: FC<{clients: ISearchClientsQueryResult[]}> = ({clients}) => {
     const [openModal, setOpenModal] = useState(false)
-    const [selectedData, setSelectedData] = useState<IClientData | undefined>(undefined)
+    const [selectedData, setSelectedData] = useState<ISearchClientsQueryResult | null>(null)
     const twenty = moment().subtract(20, 'years')
     return (
-        <>
+        <div className='tabble-wrapper'>
         <Table>
           <TableHeader>
               <HeaderColumn>Nome</HeaderColumn>
@@ -76,25 +67,27 @@ export const GenerateTable: FC<ITableProps> = (props: ITableProps) => {
               <HeaderColumn>Recomendação</HeaderColumn>
               <HeaderColumn>Observações</HeaderColumn>
           </TableHeader>
-          {props.data.map( data => (
-            <Row data={data} onProceed={() => {
-                setOpenModal(true)
+          <TableBody>
+          {clients.map( data => (
+            <Row>
+              <RowCell onProceed={() => {
+                  setOpenModal(true)
                 setSelectedData(data)
-                }}>
-              <RowCell>{data.name}</RowCell>
+              }}>{<span style={{textDecoration:"underline", cursor:"pointer", color:"CaptionText"}}>{data.name}</span>}</RowCell>
               <RowCell>{`${moment(data.dob).format('DD/MM/YYYY')} - ${moment().diff(twenty, 'years')}`}</RowCell>
               <RowCell>{data.address.city}</RowCell>
               <RowCell>{data.email}</RowCell>
               <RowCell>{data.phone}</RowCell>
               <RowCell>{data.advisedBy}</RowCell>
-              <RowCell>{data.observations_count}</RowCell>
+              <RowCell>{data.observations.length}</RowCell>
           </Row>
+         
           ))}
-          
+           </TableBody>
       </Table>
-      <TableModal data={selectedData} openModal={openModal} handleClose={() => setOpenModal(false)}/>
+      <TableModal data={selectedData as ISearchClientsQueryResult} openModal={openModal} handleClose={() => setOpenModal(false)}/>
       {/* <SimpleModal /> */}
-      </>
+      </div>
     )
 }
 export default Table

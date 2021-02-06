@@ -1,16 +1,29 @@
+$primary-color: #3f51b5;
+
 .table {
     width: 96%;
-    border: 1px solid #2a6f97;
+    border: 1px solid $primary-color;
     border-collapse: collapse;
     table-layout: fixed;
 }
 td {
-    overflow: auto;
+    width: 100%;
+    overflow:auto;
 }
+
+.table-body {
+    height: 500px;
+    min-width: 100%;
+    overflow-y: scroll;
+    overflow-x: visible;
+   
+}
+
 
 .table-header {
     color: white;
-    background-color: #2a6f97;
+    background-color: $primary-color;
+    width: 100%;
 }
 
 th:first-child {
@@ -25,7 +38,13 @@ th:first-child {
 }
 
 .row-cell-style {
-    border-bottom: 1px solid #2a6f97;
+    border-bottom: 1px solid $primary-color;
    
     padding: 12px;
+}
+
+.toggle-edit {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
 }
