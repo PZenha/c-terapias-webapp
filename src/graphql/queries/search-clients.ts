@@ -4,42 +4,30 @@ import { IClient, ISearchClientsQueryResult } from '../../types'
 
 export const SEARCH_CLIENT = gql`
   query searchClients($name: String) {
-    searchClients(name: $name) {
+    clients: searchClients(name: $name) {
       _id
       name
       dob
       email
       phone
-      gender
       address {
         city
         zipcode
         street
       }
       advisedBy
-      observations_id
       observations{
         _id
-        observations{
-          created_at
-          description
-        }
+       description
+       created_at
       }
     }
   }
 `
 
-interface searchInput {
-  name: string
-}
-
-export interface ISearchRes {
-  searchClients: ISearchClientsQueryResult[]
-}
-
-export async function getClient(name: string) {
+export default async function getClients(name: string) {
   try {
-    const res = await ApolloClient.query<ISearchRes, searchInput>({
+    const res = await ApolloClient.query<{clients: ISearchClientsQueryResult[]}, {name: string}>({
       query: SEARCH_CLIENT,
       variables: {
         name: name,
@@ -50,3 +38,4 @@ export async function getClient(name: string) {
     throw new Error(`SearchClient error: ${err}`)
   }
 }
+

@@ -1,0 +1,50 @@
+$primary-color: #3f51b5;
+
+.table {
+    width: 96%;
+    border: 1px solid $primary-color;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+td {
+    width: 100%;
+    overflow:auto;
+}
+
+.table-body {
+    height: 500px;
+    min-width: 100%;
+    overflow-y: scroll;
+    overflow-x: visible;
+   
+}
+
+
+.table-header {
+    color: white;
+    background-color: $primary-color;
+    width: 100%;
+}
+
+th:first-child {
+    padding: 10px;
+}
+
+
+.row-style {
+    &:hover {
+        background-color: #ddd;
+    }
+}
+
+.row-cell-style {
+    border-bottom: 1px solid $primary-color;
+   
+    padding: 12px;
+}
+
+.toggle-edit {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}

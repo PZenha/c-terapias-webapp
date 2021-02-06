@@ -24,6 +24,27 @@
 }
 
 .search-input {
-    border: 1px solid red;
+    margin-top: 20px;
     width: 100%;
+}
+
+
+.search-no-results {
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    span {
+        font-family: Verdana, Geneva, sans-serif;
+        font-size: 32px;
+        letter-spacing: 1px;
+        word-spacing: 1.4px;
+        color: #3F51B5;
+        font-weight: 700;
+        text-decoration: none solid rgb(68, 68, 68);
+        font-style: normal;
+        font-variant: normal;
+        text-transform: none;
+    }
 }
