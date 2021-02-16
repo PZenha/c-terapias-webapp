@@ -4,6 +4,7 @@ import TableModal, { SimpleModal } from './table-modal'
 import { IClientData } from '../../../types'
 import EditIcon from '@material-ui/icons/Edit';
 import { ISearchClientsQueryResult } from '../../../types'
+import { useHistory } from 'react-router-dom'
 import './table.scss'
 
 
@@ -39,22 +40,27 @@ export const TableBody: FC = ({children}) => (
     </tbody>
 )
 
-export const Row: FC = ({children}) => (
-    <tr className='row-style'>
+export const Row: FC<{navigateOnDClick: () => void}> = ({children, navigateOnDClick}) => (
+    <tr className='row-style' onDoubleClick={() => navigateOnDClick()}>
         {children}
     </tr>
 )
 
-export const RowCell: FC<{onProceed?: () => void}> = ({children, onProceed}) => (
-    <td className='row-cell-style' onClick={() => onProceed?.()}>
+export const RowCell: FC<{displayEditIcon?: () => void, hideEditIcon?: () => void}> = ({children, displayEditIcon, hideEditIcon}) => (
+    <td 
+        className='row-cell-style' 
+        onMouseEnter={() => displayEditIcon?.()}
+        onMouseLeave={() => hideEditIcon?.()}
+    >
         {children}
     </td>
 )
 
 export const GenerateTable: FC<{clients: ISearchClientsQueryResult[]}> = ({clients}) => {
+    const history = useHistory()
     const [openModal, setOpenModal] = useState(false)
+    const [showEditIcon, setShowEditIcon] = useState('')
     const [selectedData, setSelectedData] = useState<ISearchClientsQueryResult | null>(null)
-    const twenty = moment().subtract(20, 'years')
     return (
         <div className='tabble-wrapper'>
         <Table>
@@ -69,12 +75,28 @@ export const GenerateTable: FC<{clients: ISearchClientsQueryResult[]}> = ({clien
           </TableHeader>
           <TableBody>
           {clients.map( data => (
-            <Row>
-              <RowCell onProceed={() => {
-                  setOpenModal(true)
-                setSelectedData(data)
-              }}>{<span style={{textDecoration:"underline", cursor:"pointer", color:"CaptionText"}}>{data.name}</span>}</RowCell>
-              <RowCell>{`${moment(data.dob).format('DD/MM/YYYY')} - ${moment().diff(twenty, 'years')}`}</RowCell>
+            <Row navigateOnDClick={() => history.push(`/client/${data._id}`)}>
+              <RowCell 
+                key={data._id} 
+                displayEditIcon={() => {
+                    setShowEditIcon(data._id)
+                }}
+                hideEditIcon={() => setShowEditIcon('')}
+            
+                >{
+                  <div style={{display:'flex'}}>
+                {showEditIcon === data._id && (<div onClick={() => {
+                    setOpenModal(true)
+                    setSelectedData(data)
+                }
+                    } style={{marginRight: '5px', cursor: 'pointer'}}><EditIcon fontSize={'small'}/></div>)}
+                  <span 
+                   
+                    >{data.name}</span>
+                  </div>
+                  }
+                  </RowCell>
+              <RowCell>{`${moment(data.dob).format('DD/MM/YYYY')} - ${moment().diff(data.dob, 'years')}`}</RowCell>
               <RowCell>{data.address.city}</RowCell>
               <RowCell>{data.email}</RowCell>
               <RowCell>{data.phone}</RowCell>
@@ -86,7 +108,6 @@ export const GenerateTable: FC<{clients: ISearchClientsQueryResult[]}> = ({clien
            </TableBody>
       </Table>
       <TableModal data={selectedData as ISearchClientsQueryResult} openModal={openModal} handleClose={() => setOpenModal(false)}/>
-      {/* <SimpleModal /> */}
       </div>
     )
 }

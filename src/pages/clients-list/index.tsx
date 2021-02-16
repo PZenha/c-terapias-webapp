@@ -5,16 +5,16 @@ import MainLayout from '../../layout/main-layout'
 import { Formik } from 'formik'
 import getClients from '../../graphql/queries/search-clients'
 import { IClient, ISearchClientsQueryResult } from '../../types'
-import { MutationUpdateClient } from '../../graphql/mutations/update-client'
-import { MutationDeleteClient } from '../../graphql/mutations/delete-client'
-import Snackbar from '@material-ui/core/Snackbar'
-import Alert from '@material-ui/lab/Alert'
 import { Link } from 'react-router-dom' 
 import { GenerateTable } from './components/table'
 import NoResults from '../../assets/no-results'
-import CircularProgress from '@material-ui/core/CircularProgress';
+
+import { string, object } from 'yup'
 import './list.scss'
 
+const validationSchema = object().shape({
+  name: string().min(3).required()
+})
 
 export const SearchClients: FC = () => {
   const [clientsData, setClientsData] = useState<ISearchClientsQueryResult[] | null>(null)
@@ -28,6 +28,7 @@ export const SearchClients: FC = () => {
           initialValues={{
             name: '',
           }}
+          validationSchema={validationSchema}
           onSubmit={async (values, { setSubmitting }) => {
             setIsSearchResultEmpty(false)
             setClientsData(null)
