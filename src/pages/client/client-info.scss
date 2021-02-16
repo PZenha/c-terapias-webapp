@@ -1,12 +1,52 @@
-.card-wrapper {
+$primary-color: #3f51b5;
+
+.content-grid {
     display: flex;
+    flex-direction: column;
+}
+
+.cards-wrapper {
+    display: flex;
+    flex-direction: row;
+}
+
+.card {
+    margin-top: 50px;
+    margin-left: 50px;
+}
+
+.card-wrapper {
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    h2 {
+        margin-right: 20px;
+        color: $primary-color
+    }
 }
 
 .info-wrapper {
     display: flex;
+    align-items: center;
+    border-left: 2px solid black;
+    padding-left: 10px;
+    span {
+        font-size: larger;
+        margin-left: 5px;
+    }
 }
 
 .info-wrapper-column {
     display: flex;
     flex-direction: column;
+}
+
+.accordion {
+    width: 60vw;
+    margin-top: 50px;
+    margin-left: 50px;
+    span {
+        text-align: justify;
+        padding: 10px;
+    }
 }
