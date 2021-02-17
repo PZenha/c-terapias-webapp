@@ -1,6 +1,6 @@
 import React, { Children, FC, useState } from 'react'
 import moment from 'moment'
-import TableModal, { SimpleModal } from './table-modal'
+import TableModal from './table-modal'
 import { IClientData } from '../../../types'
 import EditIcon from '@material-ui/icons/Edit';
 import { ISearchClientsQueryResult } from '../../../types'
@@ -97,11 +97,11 @@ export const GenerateTable: FC<{clients: ISearchClientsQueryResult[]}> = ({clien
                   }
                   </RowCell>
               <RowCell>{`${moment(data.dob).format('DD/MM/YYYY')} - ${moment().diff(data.dob, 'years')}`}</RowCell>
-              <RowCell>{data.address.city}</RowCell>
-              <RowCell>{data.email}</RowCell>
-              <RowCell>{data.phone}</RowCell>
-              <RowCell>{data.advisedBy}</RowCell>
-              <RowCell>{data.observations.length}</RowCell>
+              <RowCell>{data.address?.city || ''}</RowCell>
+              <RowCell>{data.email || ''}</RowCell>
+              <RowCell>{data.phone || ''}</RowCell>
+              <RowCell>{data.advisedBy || ''}</RowCell>
+              <RowCell>{data.observations.length || 0}</RowCell>
           </Row>
          
           ))}

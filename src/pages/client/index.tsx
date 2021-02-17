@@ -2,6 +2,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import moment from 'moment'
 import MainLayout from '../../layout/main-layout'
+import ObsModal from './components/obs-model'
 
 import { Card, CardContent } from '@material-ui/core'
 import PersonIcon from '@material-ui/icons/Person';
@@ -9,6 +10,7 @@ import EmailTwoToneIcon from '@material-ui/icons/EmailTwoTone';
 import EventTwoToneIcon from '@material-ui/icons/EventTwoTone';
 import LocationOnTwoToneIcon from '@material-ui/icons/LocationOnTwoTone';
 import PhoneIphoneTwoToneIcon from '@material-ui/icons/PhoneIphoneTwoTone';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Accordion from '@material-ui/core/Accordion';
@@ -41,6 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 
 const ClientView: FC = () => {
+  const [openModal, setOpenModal] = useState(false)
   const classes = useStyles();
 
     const [client, setClient] = useState<ISearchClientsQueryResult | null>(null)
@@ -100,6 +103,11 @@ const ClientView: FC = () => {
       </div>            
 
         <div className="accordion">
+          <div className="add-obs-wrapper" onClick={() => setOpenModal(true)}>
+                  <AddCircleIcon color="primary" fontSize='large'/>
+                  <span>Adicionar nova observação</span>
+          </div>
+          
           {client?.observations.map( obs => (
             <>
             <Accordion>
@@ -118,6 +126,13 @@ const ClientView: FC = () => {
           ))}
         </div>
         </div>
+
+         <ObsModal 
+         openModal={openModal} 
+         handleClose={() =>  setOpenModal(false)} 
+         client_id={client?._id!} 
+         refetchData={(data) => setClient(data)}
+         />
         </>
     )
 }
