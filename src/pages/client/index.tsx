@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom'
 import moment from 'moment'
 import MainLayout from '../../layout/main-layout'
 import ObsModal from './components/obs-model'
+import { useQuery, gql } from '@apollo/client'
+//import nl2br from 'nl2br'
 
 import { Card, CardContent } from '@material-ui/core'
 import PersonIcon from '@material-ui/icons/Person';
@@ -41,14 +43,42 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+const FIND_CLIENT = gql`
+  query findClient($_id: ID) {
+    client: findClient(_id: $_id) {
+      _id
+      name
+      dob
+      email
+      phone
+      address {
+        city
+        zipcode
+        street
+      }
+      advisedBy
+      observations{
+        _id
+       description
+       created_at
+      }
+    }
+  }
+`
+
 
 const ClientView: FC = () => {
   const [openModal, setOpenModal] = useState(false)
   const classes = useStyles();
 
-    const [client, setClient] = useState<ISearchClientsQueryResult | null>(null)
+    //const [client, setClient] = useState<ISearchClientsQueryResult | null>(null)
     const params = useParams<{id: string}>()
     const _id = params?.id
+
+    const { data } = useQuery<{client: ISearchClientsQueryResult}>(FIND_CLIENT, { variables: {_id}})
+      const client = data?.client
+      
+      const observations = client?.observations.slice().sort((a,b) => +new Date(b.created_at) - +new Date(a.created_at))
     const info = [
       {
         icon: <EventTwoToneIcon fontSize='large' color='primary' />,
@@ -67,15 +97,6 @@ const ClientView: FC = () => {
         info: `${client?.address?.street || ''}, ${client?.address?.city || ''}  ${client?.address?.zipcode || ''}`
       }
     ]
-
-    useEffect(() => {
-      const getClientData = async () => {
-        const res = await getClient(_id)
-        const clientData = res.data?.client || null
-        setClient(clientData)
-      }
-     getClientData()
-    },[])
 
     return(
       <>
@@ -108,9 +129,9 @@ const ClientView: FC = () => {
                   <span>Adicionar nova observação</span>
           </div>
           
-          {client?.observations.map( obs => (
+          {(observations || []).map( (obs, index) => (
             <>
-            <Accordion>
+            <Accordion defaultExpanded={index === 0}>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 id={obs._id}
@@ -131,7 +152,7 @@ const ClientView: FC = () => {
          openModal={openModal} 
          handleClose={() =>  setOpenModal(false)} 
          client_id={client?._id!} 
-         refetchData={(data) => setClient(data)}
+         refetchData={(data) => console.log(data)}
          />
         </>
     )

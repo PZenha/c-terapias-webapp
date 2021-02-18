@@ -33,23 +33,23 @@ export interface IUpdateClientInput {
 }
 
 export interface ISearchClientsQueryResult {
-  _id: string
-  name: string
-  dob: Date
-  email: string
-  phone: string
-  address: {
-    city: string
-    zipcode: string
-    street: string
-  }
-  created_at: Date
-  advisedBy: string
-  observations: {
     _id: string
-    description: string
+    name: string
+    dob: Date
+    email: string
+    phone: string
+    address: {
+      city: string
+      zipcode: string
+      street: string
+    }
     created_at: Date
-  }[]
+    advisedBy: string
+    observations: {
+      _id: string
+      description: string
+      created_at: Date
+    }[]  
 }
 
 
