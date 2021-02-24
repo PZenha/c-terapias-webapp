@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState, FC } from 'react';
 import { Formik } from 'formik'
-import mutationSignIn from '../../graphql/mutations/sign-in'
+import mutationSignIn from '../../../graphql/mutations/sign-in'
+import SEND_CODE from '../../../graphql/mutations/send-code'
+import { client as ApolloClient } from '../../../graphql/client'
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -15,7 +17,7 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import mainBackground from '../../assets/sign-in-pic.jpg'
+import mainBackground from '../../../assets/sign-in-pic.jpg'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -51,9 +53,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignInSide() {
   const classes = useStyles();
-
+  const [forgotView, setForgorView] = useState(false)
   return (
-    <Grid container component="main" className={classes.root}>
+    <>
+      <Grid container component="main" className={classes.root}>
       <CssBaseline />
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
@@ -62,8 +65,11 @@ export default function SignInSide() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            {!forgotView ? 'Sign in' : 'Recuperar password'}
           </Typography>
+          
+         {!forgotView ? (
+          <>
           <Formik
             initialValues={{
                 username: '',
@@ -75,8 +81,7 @@ export default function SignInSide() {
                 console.log(tokens)
             }}
           >
-         
-         {({
+{({
               values,
               errors,
               touched,
@@ -112,7 +117,6 @@ export default function SignInSide() {
             />
             <Button
               type="submit"
-              fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
@@ -121,7 +125,7 @@ export default function SignInSide() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Link href="#" variant="body2" onClick={() => setForgorView(true)} >
                   Forgot password?
                 </Link>
               </Grid>
@@ -129,8 +133,76 @@ export default function SignInSide() {
           </form>
             )}
            </Formik>
+          </>
+        ): (
+          <>
+            <ForgotPassword />
+          </>
+        )}
+         
         </div>
       </Grid>
     </Grid>
+    
+    
+    </>
   );
+}
+
+
+const ForgotPassword:FC = () => {
+  const classes = useStyles()
+  
+  return(
+    <>
+    <Formik
+            initialValues={{
+               username: ''
+            }}
+            onSubmit={async (values) => {
+              const res = await ApolloClient.mutate({
+                mutation: SEND_CODE,
+                variables: {
+                  username: values.username
+                }
+              })
+              console.log(res)
+            }}
+          >
+            {({
+              values,
+              handleChange,
+              handleSubmit,
+              isSubmitting,
+            }) => (
+<form className={classes.form} onSubmit={handleSubmit}>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="username"
+              label="Username"
+              value={values.username}
+              onChange={handleChange}
+              name="username"
+              autoFocus
+            />
+             <Button
+              type="submit"
+              
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Enviar código
+            </Button>
+            </form>
+            
+            )}
+            
+           </Formik>
+          
+    </>
+  )
 }
