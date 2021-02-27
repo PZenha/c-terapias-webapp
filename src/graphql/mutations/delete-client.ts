@@ -21,15 +21,15 @@ export const DELETE_CLIENT = gql`
 
 export async function MutationDeleteClient(_id: string){
 
-    try{
-        const res = await ApolloClient.mutate<IDelete,IDeleteInput>({
-            mutation: DELETE_CLIENT,
-            variables: {
-                _id: _id
-            }
-        })
-        return res
-    }catch(err){
-        throw new Error(err)
-    }
+	try{
+		const res = await ApolloClient.mutate<IDelete,IDeleteInput>({
+			mutation: DELETE_CLIENT,
+			variables: {
+				_id: _id
+			}
+		})
+		return res
+	}catch(err){
+		throw new Error(err)
+	}
 }

@@ -25,17 +25,17 @@ const SIGN_IN = gql`
 `   
 
 export const mutationSignIn = async (values: IInput) => {
-    const { username, password } = values
-    const res = ApolloClient.mutate<{tokens: ITokens}, ISignInVariables>({
-        mutation: SIGN_IN,
-        variables: {
-            input: {
-                username,
-                password
-            }
-        }
-    })
-    return res
+	const { username, password } = values
+	const res = ApolloClient.mutate<{tokens: ITokens}, ISignInVariables>({
+		mutation: SIGN_IN,
+		variables: {
+			input: {
+				username,
+				password
+			}
+		}
+	})
+	return res
 }
 
 

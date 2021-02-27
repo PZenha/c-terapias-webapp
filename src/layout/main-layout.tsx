@@ -8,12 +8,9 @@ const MainLayout = (Component: React.ComponentType<any>) => ({
 }: RouteProps) => {
 	return (
 		<>
-
 			<SideBar />
-      
-      
+
 			<Component>{children}</Component>
- 
 		</>
 	)
 }

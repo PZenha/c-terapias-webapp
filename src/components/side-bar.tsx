@@ -6,39 +6,46 @@ import PersonIcon from '@material-ui/icons/Person'
 import EventIcon from '@material-ui/icons/Event'
 import '../App.css'
 
-
 const sideBarData = [
 	{
 		title: 'Página principal',
 		icon: <HomeIcon />,
-		link: '/'
+		link: '/',
 	},
 	{
 		title: 'Inserir',
 		icon: <AddIcon />,
-		link: '/insert'
+		link: '/insert',
 	},
 	{
 		title: 'Clientes',
 		icon: <PersonIcon />,
-		link: '/clients'
+		link: '/clients',
 	},
 	{
 		title: 'Marcações',
 		icon: <EventIcon />,
-		link: '/schedule'
+		link: '/schedule',
 	},
 ]
 
-const SideBar: FC = () =>{
-	return(
+const SideBar: FC = () => {
+	return (
 		<>
 			<div className="SideBar">
 				<ul className="SideBarList">
-					{sideBarData.map( (val,key) => {
-						return(
+					{sideBarData.map((val, key) => {
+						return (
 							<Link to={val.link}>
-								<li key={key} className="SideBarRow" id={window.location.pathname === val.link ? 'active' : ''}>
+								<li
+									key={key}
+									className="SideBarRow"
+									id={
+										window.location.pathname === val.link
+											? 'active'
+											: ''
+									}
+								>
 									<div id="icon">{val.icon}</div>
 									<div id="title">{val.title}</div>
 								</li>
@@ -47,7 +54,6 @@ const SideBar: FC = () =>{
 					})}
 				</ul>
 			</div>
-            
 		</>
 	)
 }

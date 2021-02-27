@@ -15,13 +15,13 @@ export const EDIT_CLIENT = gql`
 `
 
 export async function MutationUpdateClient(client: IClient) {
-  const newClient: ClientInput = {
-    client: client
-  }
-  console.log(`newClient: ${JSON.stringify(newClient,null,2)}`)
-  const res = await ApolloClient.mutate<IClient, ClientInput>({
-    mutation: EDIT_CLIENT,
-    variables: newClient,
-  })
-  return res
+	const newClient: ClientInput = {
+		client: client
+	}
+	console.log(`newClient: ${JSON.stringify(newClient,null,2)}`)
+	const res = await ApolloClient.mutate<IClient, ClientInput>({
+		mutation: EDIT_CLIENT,
+		variables: newClient,
+	})
+	return res
 }

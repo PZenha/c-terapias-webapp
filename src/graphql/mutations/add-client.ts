@@ -18,19 +18,19 @@ export const ADD_CLIENT = gql`
 `
 
 export async function MutationAddNewClient(values: IClient) {
-  const client: IClientVariables = {
-    client: values,
-    observation: values.observation!,
-  }
-  console.log(JSON.stringify(client, null, 2))
+	const client: IClientVariables = {
+		client: values,
+		observation: values.observation!,
+	}
+	console.log(JSON.stringify(client, null, 2))
 
-  try {
-    const res = await ApolloClient.mutate<IClient, IClientVariables>({
-      mutation: ADD_CLIENT,
-      variables: client,
-    })
-    return res
-  } catch (err) {
-    return err
-  }
+	try {
+		const res = await ApolloClient.mutate<IClient, IClientVariables>({
+			mutation: ADD_CLIENT,
+			variables: client,
+		})
+		return res
+	} catch (err) {
+		return err
+	}
 }

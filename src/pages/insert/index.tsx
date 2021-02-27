@@ -4,13 +4,13 @@ import MainLayout from '../../layout/main-layout'
 import './insert.scss'
 
 const InsertClient: FC = () => {
-  return (
-    <div className="formContainer">
-      <ClientForm />
-    </div>
+	return (
+		<div className="formContainer">
+			<ClientForm />
+		</div>
         
   
-  )
+	)
 }
 
 export default MainLayout(InsertClient)

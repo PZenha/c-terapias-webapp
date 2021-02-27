@@ -26,16 +26,16 @@ export const SEARCH_CLIENT = gql`
 `
 
 export default async function getClients(name: string) {
-  try {
-    const res = await ApolloClient.query<{clients: ISearchClientsQueryResult[]}, {name: string}>({
-      query: SEARCH_CLIENT,
-      variables: {
-        name: name,
-      },
-    })
-    return res
-  } catch (err) {
-    throw new Error(`SearchClient error: ${err}`)
-  }
+	try {
+		const res = await ApolloClient.query<{clients: ISearchClientsQueryResult[]}, {name: string}>({
+			query: SEARCH_CLIENT,
+			variables: {
+				name: name,
+			},
+		})
+		return res
+	} catch (err) {
+		throw new Error(`SearchClient error: ${err}`)
+	}
 }
 
