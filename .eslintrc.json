@@ -49,6 +49,13 @@
         "no-unused-vars": "off",
         "no-console": "off",
         "import/prefer-default-export": "off",
-        "@typescript-eslint/no-var-requires": 0
+        "@typescript-eslint/no-var-requires": 0,
+        "react/display-name": ["off", {
+            "ignoreTranspilerName": false
+        }],
+        "react/jsx-key": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unused-vars": "off"
     }
 }
