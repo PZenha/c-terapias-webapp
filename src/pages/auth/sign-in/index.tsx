@@ -3,7 +3,7 @@ import { Formik } from 'formik'
 import mutationSignIn from '../../../graphql/mutations/sign-in'
 import SEND_CODE from '../../../graphql/mutations/send-code'
 import { client as ApolloClient } from '../../../graphql/client'
-import CodeInputModal from './code-input-modal'
+import CodeInput from './code-input-modal'
 
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
@@ -54,6 +54,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignInSide() {
 	const classes = useStyles()
+	const [step, setStep] = useState<'SIGN_IN' | 'SEND_CODE' | 'VERIFY_CODE' | 'RESET_PASSWORD'>('SIGN_IN')
+	const [recoveryToken, setRecoveryToken] = useState<string|null>(null)
 	const [forgotView, setForgorView] = useState(false)
 	const [codeView, setCodeView] = useState(false)
 	const [usernameToReset, setUsername] = useState('')
@@ -71,7 +73,7 @@ export default function SignInSide() {
 							{!forgotView ? 'Sign in' : 'Recuperar password'}
 						</Typography>
           
-						{!forgotView ? (
+						{step === 'SIGN_IN' && (
 							<>
 								<Formik
 									initialValues={{
@@ -124,12 +126,12 @@ export default function SignInSide() {
 												color="primary"
 												className={classes.submit}
 											>
-              Sign In
+              									Sign In
 											</Button>
 											<Grid container>
 												<Grid item xs>
-													<Link href="#" variant="body2" onClick={() => setForgorView(true)} >
-                  Forgot password?
+													<Link href="#" variant="body2" onClick={() => setStep('SEND_CODE')} >
+                  										Forgot password?
 													</Link>
 												</Grid>
 											</Grid>
@@ -137,27 +139,34 @@ export default function SignInSide() {
 									)}
 								</Formik>
 							</>
-						): (
+						)}
+						
+						{step === 'SEND_CODE' && (
 							<>
 								<ForgotPassword onCodeSent={(username) => {
 									setUsername(username)
-									setForgorView(false)
-									setCodeView(true)
+									setStep('VERIFY_CODE')
 								}}/>
 							</>
 						)}
 
+						{step === 'VERIFY_CODE' && (
+							<>
+								<CodeInput 
+									username={usernameToReset}
+									handleSuccess={(token) => setStep('RESET_PASSWORD')}
+								/>
+							</>
+						)}
+
+						{step === 'RESET_PASSWORD' && (
+							<>
+							</>
+						)}
          
 					</div>
 				</Grid>
 			</Grid>
-    
-			<CodeInputModal 
-				username={usernameToReset}
-				openModal={codeView} 
-				handleClose={()=>setCodeView(false)} 
-				handleSuccess={(token) => console.log(token)}
-			/>
 		</>
 	)
 }

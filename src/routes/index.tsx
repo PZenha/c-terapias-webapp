@@ -9,7 +9,7 @@ const Routes = () => (
 	<Router>
 		<Switch>
 			<Route
-				path="/"
+				path="/home"
 				exact
 				component={require('../pages/home').default}
 			/>
@@ -34,7 +34,7 @@ const Routes = () => (
 				component={require('../pages/client').default}
 			/>
 			<Route
-				path="/login"
+				path="/"
 				exact
 				component={require('../pages/auth/sign-in').default}
 			/>
