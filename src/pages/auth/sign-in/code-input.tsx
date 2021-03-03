@@ -3,6 +3,7 @@ import { TextField, Dialog, DialogContent, Button, Switch } from '@material-ui/c
 import { Formik } from 'formik'
 import {client as ApolloClient} from '../../../graphql/client'
 import VERIFY_CODE, { verifyCodeVariables } from '../../../graphql/mutations/verify-code'
+import useStyles from './styles-hook'
 
 export interface IModalProps  {
     username: string
@@ -11,6 +12,7 @@ export interface IModalProps  {
 
 
 const CodeInput:FC<IModalProps> = (props: IModalProps) =>{
+	const classes = useStyles()
 	return(
 		<>
 			<Formik
@@ -39,7 +41,7 @@ const CodeInput:FC<IModalProps> = (props: IModalProps) =>{
 					handleSubmit,
 				}) => (
 					<div>
-						<form onSubmit={handleSubmit}>
+						<form className={classes.form} onSubmit={handleSubmit}>
 							<TextField
 								name="code"
 								value={values.code}
@@ -47,8 +49,11 @@ const CodeInput:FC<IModalProps> = (props: IModalProps) =>{
 								onBlur={handleBlur}
 								id="code"
 								label="Código"
+								fullWidth
 								variant="outlined"
-								style={{width: '100%'}}
+								margin="normal"
+								required
+								autoFocus
 							/>
                 
 							<Button
