@@ -6,6 +6,8 @@ import CodeInput from './code-input'
 import useStyles from './styles-hook'
 import ResetPassword from './reset-password-input'
 import UsernameInput from './username-input'
+import { saveTokens } from '../../../store/authentication'
+import { useHistory } from 'react-router-dom'
 
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
@@ -19,6 +21,7 @@ import Typography from '@material-ui/core/Typography'
 
 
 const SignInSide:FC = () => {
+	const history = useHistory()
 	const classes = useStyles()
 	const [step, setStep] = useState<'SIGN_IN' | 'SEND_CODE' | 'VERIFY_CODE' | 'RESET_PASSWORD'>('SIGN_IN')
 	const [recoveryToken, setRecoveryToken] = useState<string|null>(null)
@@ -49,7 +52,17 @@ const SignInSide:FC = () => {
 									}}
 									onSubmit={async (values) => {
 										const { username, password } = values
-										const tokens = await mutationSignIn({username, password})
+										const res = await mutationSignIn({username, password})
+
+										if(res.data && !res.errors){
+											saveTokens(
+												{
+													accessToken: res.data.tokens.accessToken, 
+													refreshToken: res.data.tokens.refreshToken
+												}
+											)
+											history.push('/insert')
+										}
 									}}
 								>
 									{({

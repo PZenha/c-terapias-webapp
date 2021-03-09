@@ -1,12 +1,13 @@
 import React from 'react'
 import {
-	BrowserRouter as Router,
 	Switch,
 	Route,
 } from 'react-router-dom'
+import { Router } from 'react-router'
+import history from '../history'
 
 const Routes = () => (
-	<Router>
+	<Router history={history}>
 		<Switch>
 			<Route
 				path="/home"

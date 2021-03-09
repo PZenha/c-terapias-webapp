@@ -1,14 +1,10 @@
 import { client as ApolloClient } from '../client'
+import { ITokens } from '../../types'
 import { gql } from '@apollo/client'
 
 interface IInput{
         username: string
         password: string
-}
-
-export interface ITokens {
-    accessToken: string
-    refreshToken: string
 }
 
 export interface ISignInVariables {

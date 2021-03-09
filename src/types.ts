@@ -66,3 +66,8 @@ export interface IClientData {
   advisedBy: string
   observations_count: number
 }
+
+export interface ITokens {
+  accessToken: string
+  refreshToken: string
+}
