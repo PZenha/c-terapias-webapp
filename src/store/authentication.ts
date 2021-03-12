@@ -14,6 +14,13 @@ export const getRefreshToken = () => {
 	return localStorage.getItem('refreshToken') || ''
 }
 
+export const getTokens = () => {
+	return {
+		accessToken: localStorage.getItem('accessToken') || '',
+		refreshToken: localStorage.getItem('refreshToken') || ''
+	}
+}
+
 export const resetStore = () => {
 	localStorage.removeItem('accessToken')
 	localStorage.removeItem('refreshToken')
