@@ -10,7 +10,7 @@ const sideBarData = [
 	{
 		title: 'Página principal',
 		icon: <HomeIcon />,
-		link: '/',
+		link: '/home',
 	},
 	{
 		title: 'Inserir',
