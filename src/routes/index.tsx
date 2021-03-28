@@ -30,11 +30,13 @@ const AuthRoute: FC<RouteProps & {
 	component: any
 	shielded: boolean
 }> = ({component: Component, shielded ,...RouteProps}) => (
-	<Route render={props => (
-		shielded ? (checkAuth() ? (<Component {...props}/>) : (<Redirect to={{pathname: '/sign-in'}} />)) : (
-			(!checkAuth() ? (<Component {...props}/>) : (<Redirect to={{pathname: '/home'}} />))
+	<Route {...RouteProps} render={props => 
+		(
+			shielded ? (checkAuth() ? (<Component {...props}/>) : (<Redirect to={{pathname: '/sign-in'}} />)) : (
+				(!checkAuth() ? (<Component {...props}/>) : (<Redirect to={{pathname: '/home'}} />))
+			)
 		)
-	)}/>
+	}/>
 )
 
 const Routes = () => (
