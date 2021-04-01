@@ -70,10 +70,12 @@ const FIND_CLIENT = gql`
 const ClientView: FC = () => {
 	const [openModal, setOpenModal] = useState(false)
 	const classes = useStyles()
-
+	console.log('ui')
 	//const [client, setClient] = useState<ISearchClientsQueryResult | null>(null)
 	const params = useParams<{id: string}>()
 	const _id = params?.id
+
+	console.log(params)
 
 	const { data } = useQuery<{client: ISearchClientsQueryResult}>(FIND_CLIENT, { variables: {_id}})
 	const client = data?.client

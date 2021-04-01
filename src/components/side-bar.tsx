@@ -36,7 +36,7 @@ const SideBar: FC = () => {
 				<ul className="SideBarList">
 					{sideBarData.map((val, key) => {
 						return (
-							<Link to={val.link}>
+							<Link key={key} to={val.link}>
 								<li
 									key={key}
 									className="SideBarRow"
