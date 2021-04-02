@@ -4,6 +4,8 @@ import moment from 'moment'
 import MainLayout from '../../layout/main-layout'
 import ObsModal from './components/obs-model'
 import { useQuery, gql } from '@apollo/client'
+import NextAppointment from './components/next-appointment'
+import InfoWrapper from '../../components/info-wrapper'
 //import nl2br from 'nl2br'
 
 import { Card, CardContent } from '@material-ui/core'
@@ -122,7 +124,7 @@ const ClientView: FC = () => {
 						</Card>
 					</div>
 
-    
+					<NextAppointment client_id={_id}/>
 				</div>            
 
 				<div className="accordion">
@@ -161,11 +163,6 @@ const ClientView: FC = () => {
 }
 
 
-const InfoWrapper: FC<{icon: JSX.Element, info: string}> = ({icon, info}) => (
-	<div className="info-wrapper">
-		{icon}
-		<span>{info}</span>
-	</div>
-)
+
 
 export default MainLayout(ClientView)

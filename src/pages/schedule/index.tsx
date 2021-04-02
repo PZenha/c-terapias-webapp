@@ -9,14 +9,6 @@ import {
 } from '@devexpress/dx-react-scheduler-material-ui'
 
 
-// const resources = [{
-// 	fieldName: 'type',
-// 	title: 'Type',
-// 	instances: [
-// 		{ id: 'private', text: 'Private', color: '#EC407A' },
-// 		{ id: 'work', text: 'Work', color: '#7E57C2' },
-// 	],
-// }]
 
 interface IAppointmentsRes {
 	scheduled_to: Date
@@ -73,9 +65,7 @@ const Schedule: FC = () => {
 					  <Toolbar />
 					<DateNavigator />
 					<Appointments />
-					<Resources
-						//data={resources}
-					/>
+					<Resources />
 				</Scheduler>
 			</Paper>
 		</div>

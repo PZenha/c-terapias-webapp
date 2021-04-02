@@ -13,7 +13,8 @@ $hover-color: #647bff;
 
 .card {
     margin-top: 50px;
-    margin-left: 50px;
+    margin-left: 25px;
+    width: 40vw;
 }
 
 .card-wrapper {
@@ -43,9 +44,9 @@ $hover-color: #647bff;
 }
 
 .accordion {
-    width: 60vw;
+    width: 40vw;
     margin-top: 50px;
-    margin-left: 50px;
+    margin-left: 25px;
     margin-bottom: 50px;
     span {
         text-align: justify;
