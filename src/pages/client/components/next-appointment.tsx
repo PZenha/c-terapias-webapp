@@ -20,19 +20,18 @@ const FIND_APPOINTMENT_BY_CLIENT_ID = gql`
     }
 `
 
-const NextAppointment:FC<{client_id: string, onAppointments?: () => void}> = ({client_id, onAppointments}) => {
-	const { data } = useQuery<{appointments: IAppointment[]}, {client_id: string}>(FIND_APPOINTMENT_BY_CLIENT_ID, {variables: {client_id}})
+const NextAppointment:FC<{appointments: IAppointment[], }> = ({appointments}) => {
 	const today = moment().utc().toDate()
  
-	const appointments = data?.appointments || []
 	const closest = appointments.reduce((a, b) => +new Date(a) - +today < +b.scheduled_to - +today ? new Date(a) : b.scheduled_to ,new Date()) || null
 
 	return(
 		<>
         	<div style={{marginRight:'25px'}} className="card">
-				<Card>
-					<CardContent>
+				<Card style={{minHeight:'100%'}}>
+					<CardContent style={{minHeight:'100%'}}>
 						<div className="card-wrapper">
+							
 							{appointments.length > 0 ? (
 								<>
 									<h2 style={{color:'#58a832'}}>Próxima marcação</h2>
@@ -42,8 +41,8 @@ const NextAppointment:FC<{client_id: string, onAppointments?: () => void}> = ({c
 										/>
 									</div> 
 								</>): <h2 style={{color:'#757575'}}>Não tem marcações</h2> }
-
 						</div>
+
 					</CardContent>
 				</Card>
 			</div>

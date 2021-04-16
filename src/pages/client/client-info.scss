@@ -1,5 +1,6 @@
 $primary-color: #3f51b5;
 $hover-color: #647bff;
+$hover-green: #b9d8ab;
 
 .content-grid {
     display: flex;
@@ -21,6 +22,8 @@ $hover-color: #647bff;
     padding: 15px;
     display: flex;
     align-items: center;
+    justify-content: center;
+    min-height: 26vh;
     h2 {
         margin-right: 20px;
         color: $primary-color
@@ -74,4 +77,22 @@ $hover-color: #647bff;
 
 .add-obs-wrapper:hover .MuiSvgIcon-root{
     color: $hover-color;
+}
+
+.accordion-appointments-wrapper {
+    display: flex;
+    flex-direction: row;
+}
+
+.appointments-list {
+     display: flex;
+    flex-direction: column
+}
+
+.paper-wrapper {
+    margin-left: 15px;
+    margin-right: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }

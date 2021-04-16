@@ -6,6 +6,8 @@ import ObsModal from './components/obs-model'
 import { useQuery, gql } from '@apollo/client'
 import NextAppointment from './components/next-appointment'
 import InfoWrapper from '../../components/info-wrapper'
+import ListAppointments from './components/list-appointments'
+import CreateAppointmentModal from './components/add-appointment-modal'
 //import nl2br from 'nl2br'
 
 import { Card, CardContent } from '@material-ui/core'
@@ -23,7 +25,7 @@ import AccordionSummary from '@material-ui/core/AccordionSummary'
 import Typography from '@material-ui/core/Typography'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 
-import { ISearchClientsQueryResult } from '../../types'
+import { ISearchClientsQueryResult, IAppointment } from '../../types'
 import getClient from '../../graphql/queries/get-client'
 import './client-info.scss'
 
@@ -68,11 +70,21 @@ const FIND_CLIENT = gql`
   }
 `
 
+const FIND_APPOINTMENT_BY_CLIENT_ID = gql`
+    query FindAppointmentByClientID($client_id: ID){
+        appointments: findAppointmentByClient(client_id: $client_id){
+            _id
+            scheduled_to
+        }
+    }
+`
+
 
 const ClientView: FC = () => {
 	const [openModal, setOpenModal] = useState(false)
+	const [openAppointmentModal, setOpenAppointmentModal] = useState(false)
 	const classes = useStyles()
-	console.log('ui')
+
 	//const [client, setClient] = useState<ISearchClientsQueryResult | null>(null)
 	const params = useParams<{id: string}>()
 	const _id = params?.id
@@ -80,8 +92,11 @@ const ClientView: FC = () => {
 	console.log(params)
 
 	const { data } = useQuery<{client: ISearchClientsQueryResult}>(FIND_CLIENT, { variables: {_id}})
+	const findAppointmentsRes = useQuery<{appointments: IAppointment[]}, {client_id: string}>(FIND_APPOINTMENT_BY_CLIENT_ID, {variables: {client_id: _id}})
 	const client = data?.client
       
+	const appointments = findAppointmentsRes?.data?.appointments || []
+
 	const observations = client?.observations.slice().sort((a,b) => +new Date(b.created_at) - +new Date(a.created_at))
 	const info = [
 		{
@@ -107,7 +122,7 @@ const ClientView: FC = () => {
 			<div className="content-grid">
 				<div className="cards-wrapper">
 					<div className="card">
-						<Card>
+						<Card style={{minHeight:'100%'}}>
 							<CardContent>
 								<div className="card-wrapper">
 									<h2>{client?.name}</h2>
@@ -124,31 +139,42 @@ const ClientView: FC = () => {
 						</Card>
 					</div>
 
-					<NextAppointment client_id={_id}/>
+					<NextAppointment appointments={appointments}/>
 				</div>            
 
-				<div className="accordion">
-					<div className="add-obs-wrapper" onClick={() => setOpenModal(true)}>
-						<AddCircleIcon color="primary" fontSize='large'/>
-						<span>Adicionar nova observação</span>
-					</div>
+				<div className='accordion-appointments-wrapper'>
+					<div className="accordion">
+						<div className="add-obs-wrapper" onClick={() => setOpenModal(true)}>
+							<AddCircleIcon color="primary" fontSize='large'/>
+							<span>Adicionar nova observação</span>
+						</div>
           
-					{(observations || []).map( (obs, index) => (
-						<>
-							<Accordion defaultExpanded={index === 0}>
-								<AccordionSummary
-									expandIcon={<ExpandMoreIcon />}
-									id={obs._id}
-								>
-									<Typography className={classes.heading}>{moment(obs.created_at).format('DD/MM/YYYY HH:mm')}</Typography>
-									<Typography className={classes.secondaryHeading}>{`${obs.description.toString().slice(0,40)}...`}</Typography>
-								</AccordionSummary>
-								<AccordionDetails>
-									<span>{obs.description}</span>
-								</AccordionDetails>
-							</Accordion>
-						</>
-					))}
+						{(observations || []).map( (obs, index) => (
+							<>
+								<Accordion defaultExpanded={index === 0}>
+									<AccordionSummary
+										expandIcon={<ExpandMoreIcon />}
+										id={obs._id}
+									>
+										<Typography className={classes.heading}>{moment(obs.created_at).format('DD/MM/YYYY HH:mm')}</Typography>
+										<Typography className={classes.secondaryHeading}>{`${obs.description.toString().slice(0,40)}...`}</Typography>
+									</AccordionSummary>
+									<AccordionDetails>
+										<span>{obs.description}</span>
+									</AccordionDetails>
+								</Accordion>
+							</>
+						))}
+					</div>
+
+					<div className="accordion">
+						<div className="add-obs-wrapper" onClick={() => setOpenAppointmentModal(true)}>
+							<AddCircleIcon color={'primary'} fontSize='large'/>
+							<span>Fazer marcação</span>
+						</div>
+
+						<ListAppointments appointments={appointments}/>
+					</div>
 				</div>
 			</div>
 
@@ -157,6 +183,12 @@ const ClientView: FC = () => {
 				handleClose={() =>  setOpenModal(false)} 
 				client_id={client?._id || ''} 
 				refetchData={(data) => console.log(data)}
+			/>
+
+			<CreateAppointmentModal 
+				openModal={openAppointmentModal}
+				handleClose={() => setOpenAppointmentModal(false)}
+				client_id={client?._id || ''}
 			/>
 		</>
 	)
