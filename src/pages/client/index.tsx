@@ -18,17 +18,28 @@ import LocationOnTwoToneIcon from '@material-ui/icons/LocationOnTwoTone'
 import PhoneIphoneTwoToneIcon from '@material-ui/icons/PhoneIphoneTwoTone'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme, createStyles, useTheme } from '@material-ui/core/styles'
 import Accordion from '@material-ui/core/Accordion'
 import AccordionDetails from '@material-ui/core/AccordionDetails'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
 import Typography from '@material-ui/core/Typography'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import AppBar from '@material-ui/core/AppBar'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
+import Box from '@material-ui/core/Box'
+
 
 import { ISearchClientsQueryResult, IAppointment } from '../../types'
 import getClient from '../../graphql/queries/get-client'
 import './client-info.scss'
 
+interface TabPanelProps {
+  children?: React.ReactNode;
+  dir?: string;
+  index: any;
+  value: any;
+}
 
 const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -78,12 +89,44 @@ const FIND_APPOINTMENT_BY_CLIENT_ID = gql`
         }
     }
 `
+function a11yProps(index: any) {
+	return {
+		id: `full-width-tab-${index}`,
+		'aria-controls': `full-width-tabpanel-${index}`,
+	}
+}
 
 
 const ClientView: FC = () => {
 	const [openModal, setOpenModal] = useState(false)
 	const [openAppointmentModal, setOpenAppointmentModal] = useState(false)
+	const theme = useTheme()
 	const classes = useStyles()
+	  const [value, setValue] = useState(0)
+
+	const handleChange = (event: React.ChangeEvent<any>, newValue: number) => {
+		setValue(newValue)
+	}
+
+	function TabPanel(props: TabPanelProps) {
+		const { children, value, index, ...other } = props
+
+		return (
+			<div
+				role="tabpanel"
+				hidden={value !== index}
+				id={`full-width-tabpanel-${index}`}
+				aria-labelledby={`full-width-tab-${index}`}
+				{...other}
+			>
+				{value === index && (
+					<Box>
+						<Typography>{children}</Typography>
+					</Box>
+				)}
+			</div>
+		)
+	}
 
 	//const [client, setClient] = useState<ISearchClientsQueryResult | null>(null)
 	const params = useParams<{id: string}>()
@@ -141,41 +184,62 @@ const ClientView: FC = () => {
 
 					<NextAppointment appointments={appointments}/>
 				</div>            
+				<div className='tabs-wrapper'>
 
-				<div className='accordion-appointments-wrapper'>
-					<div className="accordion">
-						<div className="add-obs-wrapper" onClick={() => setOpenModal(true)}>
-							<AddCircleIcon color="primary" fontSize='large'/>
-							<span>Adicionar nova observação</span>
-						</div>
+				
+					<AppBar position="static" color="default">
+					  <Tabs
+							value={value}
+							onChange={handleChange}
+							indicatorColor="primary"
+							textColor="primary"
+							variant="fullWidth"
+							aria-label="full width tabs example"
+						>
+						 <Tab label={`Observações (${observations?.length || 0})`} {...a11yProps(0)} />
+							<Tab label={`Marcações (${appointments?.length || 0})`} {...a11yProps(1)} />
+						</Tabs>
+					</AppBar>
+				 <TabPanel value={value} index={0} dir={theme.direction}>
+						<div className="accordion">
+							<div className="add-obs-wrapper" onClick={() => setOpenModal(true)}>
+								<AddCircleIcon color="primary" fontSize='large'/>
+								<span>Adicionar nova observação</span>
+							</div>
           
-						{(observations || []).map( (obs, index) => (
-							<>
-								<Accordion defaultExpanded={index === 0}>
-									<AccordionSummary
-										expandIcon={<ExpandMoreIcon />}
-										id={obs._id}
-									>
-										<Typography className={classes.heading}>{moment(obs.created_at).format('DD/MM/YYYY HH:mm')}</Typography>
-										<Typography className={classes.secondaryHeading}>{`${obs.description.toString().slice(0,40)}...`}</Typography>
-									</AccordionSummary>
-									<AccordionDetails>
-										<span>{obs.description}</span>
-									</AccordionDetails>
-								</Accordion>
-							</>
-						))}
-					</div>
-
-					<div className="accordion">
-						<div className="add-obs-wrapper" onClick={() => setOpenAppointmentModal(true)}>
-							<AddCircleIcon color={'primary'} fontSize='large'/>
-							<span>Fazer marcação</span>
+							{(observations || []).map( (obs, index) => (
+								<>
+									<Accordion defaultExpanded={index === 0}>
+										<AccordionSummary
+											expandIcon={<ExpandMoreIcon />}
+											id={obs._id}
+										>
+											<Typography className={classes.heading}>{moment(obs.created_at).format('DD/MM/YYYY HH:mm')}</Typography>
+											<Typography className={classes.secondaryHeading}>{`${obs.description.toString().slice(0,40)}...`}</Typography>
+										</AccordionSummary>
+										<AccordionDetails>
+											<span>{obs.description}</span>
+										</AccordionDetails>
+									</Accordion>
+								</>
+							))}
 						</div>
+					</TabPanel>
 
-						<ListAppointments appointments={appointments}/>
-					</div>
+					<TabPanel value={value} index={1} dir={theme.direction}>
+						<div className="accordion">
+							<div className="add-obs-wrapper" onClick={() => setOpenAppointmentModal(true)}>
+								<AddCircleIcon color={'primary'} fontSize='large'/>
+								<span>Fazer marcação</span>
+							</div>
+
+							<ListAppointments appointments={appointments}/>
+						</div>
+					</TabPanel>
+		
 				</div>
+
+				
 			</div>
 
 			<ObsModal 

@@ -47,10 +47,11 @@ $hover-green: #b9d8ab;
 }
 
 .accordion {
-    width: 40vw;
+    width: 96%;
     margin-top: 50px;
     margin-left: 25px;
     margin-bottom: 50px;
+    margin-right: 25px;
     span {
         text-align: justify;
         padding: 10px;
@@ -95,4 +96,19 @@ $hover-green: #b9d8ab;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
+}
+
+.radio-group {
+    display: flex;
+}
+
+.tabs-wrapper{
+    margin: 25px;
+}
+
+.flex-position {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }

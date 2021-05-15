@@ -24,6 +24,7 @@ const NextAppointment:FC<{appointments: IAppointment[], }> = ({appointments}) =>
 	const today = moment().utc().toDate()
  
 	const closest = appointments.reduce((a, b) => +new Date(a) - +today < +b.scheduled_to - +today ? new Date(a) : b.scheduled_to ,new Date()) || null
+	const displayNext = moment(closest) > moment()
 
 	return(
 		<>
@@ -32,7 +33,7 @@ const NextAppointment:FC<{appointments: IAppointment[], }> = ({appointments}) =>
 					<CardContent style={{minHeight:'100%'}}>
 						<div className="card-wrapper">
 							
-							{appointments.length > 0 ? (
+							{appointments.length > 0 && displayNext ? (
 								<>
 									<h2 style={{color:'#58a832'}}>Próxima marcação</h2>
 									<div className="info-wrapper-column">
@@ -40,7 +41,7 @@ const NextAppointment:FC<{appointments: IAppointment[], }> = ({appointments}) =>
 											info={moment(closest).utc().format('DD/MM/YYYY - HH:mm').toString() }
 										/>
 									</div> 
-								</>): <h2 style={{color:'#757575'}}>Não tem marcações</h2> }
+								</>): <h2 style={{color:'#757575'}}>Não tem marcações agendadas</h2> }
 						</div>
 
 					</CardContent>
