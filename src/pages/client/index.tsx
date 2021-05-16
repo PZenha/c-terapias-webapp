@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) =>
 	}),
 )
 
-const FIND_CLIENT = gql`
+export const FIND_CLIENT = gql`
   query findClient($_id: ID) {
     client: findClient(_id: $_id) {
       _id
@@ -233,7 +233,7 @@ const ClientView: FC = () => {
 								<span>Fazer marcação</span>
 							</div>
 
-							<ListAppointments appointments={appointments}/>
+							<ListAppointments appointments={appointments} client_id={client?._id}/>
 						</div>
 					</TabPanel>
 		

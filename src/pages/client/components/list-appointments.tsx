@@ -13,15 +13,16 @@ import moment from 'moment'
 import InfoWrapper from '../../../components/info-wrapper'
 import { IAppointment } from '../../../types'
 import { Formik } from 'formik'
+import { FIND_CLIENT } from '../'
 
 import '../client-info.scss'
 import { isNullableType } from 'graphql'
 
 interface IConfirmationModal {
-	_id?: string
 	showed_up?: boolean
 	open: boolean
 	handleClose: () => void
+	onConfirmation: () => void
 }
 
 const FIND_APPOINTMENT_BY_CLIENT_ID = gql`
@@ -39,18 +40,12 @@ const CONFIRM_APPOINTMENT = gql`
 	}
 `
 
-const ListAppointments:FC<{appointments: IAppointment[]}> = ({appointments}) => {
+const ListAppointments:FC<{appointments: IAppointment[], client_id?: string}> = ({appointments, client_id}) => {
 	const [showedUp, setShowedUp] = useState(false)
 	const [openModal, setOpenModal] = useState(false)
 	const [confirmationData, setConfirmationData] = useState<{_id: string, showed_up: boolean}>()
 	const appts = appointments.slice().sort((a,b) => moment(b.scheduled_to).valueOf() - moment(a.scheduled_to).valueOf()).reverse()
 	
-	const [backgroundColor, setBackgroundColor] = useState<'#FFC2C2' | 'C4FFBF' | 'white'>('white')
-	
-	
-	useEffect(() => {
-		setBackgroundColor(!showedUp && '#FFC2C2' || showedUp && 'C4FFBF' || 'white')
-	})
 	return(
 		<>
         	<div style={{width:'100%', marginTop:'16px'}} className="appointments-list">
@@ -92,22 +87,27 @@ const ListAppointments:FC<{appointments: IAppointment[]}> = ({appointments}) => 
 			</div>
 
 			<ConfirmationModal 
-				_id={confirmationData?._id}
-				showed_up={confirmationData?.showed_up}
 				open={openModal}
+				showed_up={confirmationData?.showed_up}
 				handleClose={() => setOpenModal(false)}
+				onConfirmation={async () => {
+					await confirmAppointmentPresence(confirmationData?._id, confirmationData?.showed_up, client_id) 
+					setOpenModal(false)	
+				}
+				}
 			/>
 		</>
 	)
 }
 
-async function confirmAppointmentPresence(_id: string, showed_up: boolean){
+async function confirmAppointmentPresence(_id?: string, showed_up?: boolean, client_id?: string){
 	return await APolloClient.mutate({
 		mutation: CONFIRM_APPOINTMENT,
 		variables: {
 			_id,
 			showed_up
-		}
+		},
+		refetchQueries: [{query: FIND_CLIENT, variables: {_id: client_id} }]
 	})
 }
 
@@ -121,18 +121,43 @@ const ConfirmationModal: FC<IConfirmationModal> = (props: IConfirmationModal) =>
 			aria-labelledby="simple-modal-title"
 			aria-describedby="simple-modal-description"
 		>
-			<DialogContent
-				style={
-					{
-						width:'100%',
-						height: '250px'
-					}
-				}
-			>
-				<span>Confirma que o paciente</span> {
-					props.showed_up 
-						? (<span style={{color:'green'}}>compareceu?</span>) 
-						: (<span style={{color:'red'}}>não compareceu?</span>)}
+			<DialogContent>
+				<div>
+					<div className='modal-typography'>
+						<span>Confirma que o paciente</span> {
+							props.showed_up 
+								? (<span style={{color:'green'}}>compareceu?</span>) 
+								: (<span style={{color:'red'}}>não compareceu?</span>)}
+
+					
+					</div>
+
+					<div className='flex-position right margin-top'>
+						<Button
+							variant='contained'
+							size='medium'
+							onClick={() => props.handleClose()}
+						>
+						Cancelar
+						</Button>
+
+						<Button
+							variant='contained'
+							color='primary'
+							size='medium'
+							style={{marginLeft: '10px'}}
+							onClick={()=> props.onConfirmation()}
+						>
+						Confirmo
+						</Button>
+
+						
+					</div>
+
+					
+				</div>
+				
+				
 			</DialogContent>
 		</Dialog>
 	</div>
