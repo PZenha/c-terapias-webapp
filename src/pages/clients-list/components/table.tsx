@@ -70,7 +70,6 @@ export const GenerateTable: FC<{clients: ISearchClientsQueryResult[]}> = ({clien
 					<HeaderColumn>Morada</HeaderColumn>
 					<HeaderColumn>E-Mail</HeaderColumn>
 					<HeaderColumn>Telm.</HeaderColumn>
-					<HeaderColumn>Recomendação</HeaderColumn>
 					<HeaderColumn>Observações</HeaderColumn>
 				</TableHeader>
 				<TableBody>
@@ -100,7 +99,6 @@ export const GenerateTable: FC<{clients: ISearchClientsQueryResult[]}> = ({clien
 							<RowCell>{data.address?.city || ''}</RowCell>
 							<RowCell>{data.email || ''}</RowCell>
 							<RowCell>{data.phone || ''}</RowCell>
-							<RowCell>{data.advisedBy || ''}</RowCell>
 							<RowCell>{data.observations.length || 0}</RowCell>
 						</Row>
          
