@@ -71,3 +71,12 @@ export interface ITokens {
   accessToken: string
   refreshToken: string
 }
+
+export interface IAppointment {
+  _id: string
+  client_id: string
+  scheduled_to: Date
+  created_at: Date
+  showed_up: boolean
+  clientName: string
+}
