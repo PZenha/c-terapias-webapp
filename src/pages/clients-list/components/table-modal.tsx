@@ -4,8 +4,12 @@ import Modal from '@material-ui/core/Modal'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import { TextField, Dialog, DialogContent, Button, Switch } from '@material-ui/core'
 import EditIcon from '@material-ui/icons/Edit'
+import DeleteIcon from '@material-ui/icons/Delete'
 import { Formik } from 'formik'
-import { ISearchClientsQueryResult } from '../../../types'
+import { IClient, ISearchClientsQueryResult } from '../../../types'
+import { MutationUpdateClient } from '../../../graphql/mutations/update-client'
+import { MutationDeleteClient } from '../../../graphql/mutations/delete-client'
+
 import './table.scss'
 
 interface IModalProps  {
@@ -36,9 +40,27 @@ const TableModal: FC<IModalProps> = (props: IModalProps) => {
 							street: data?.address.street,
 							email: data?.email,
 							phone: data?.phone,
-							advisedBy: data?.advisedBy,
+							advisedBy: data?.advisedBy
 						}}
-						onSubmit={ () => console.log('submit from modal')}
+						onSubmit={ async (values) => {
+							const client: IClient = {
+								_id: data?._id,
+								address: {
+									city: values.city,
+									zipcode: values.zipcode,
+									street: values.street
+								},
+								name: values.name,
+								dob: values.dob,
+								email: values.email,
+								phone: values.phone,
+								advisedBy: values.advisedBy
+							}
+							const res = await MutationUpdateClient(client)
+							if (!res.errors){
+								return
+							}
+						}}
 					>
 						{({
 							values,
@@ -162,13 +184,23 @@ const TableModal: FC<IModalProps> = (props: IModalProps) => {
 										variant="outlined"
 										style={{width: '100%'}}
 									/>
-									<Button
-										type="submit"
-										disabled={readOnly}
-										variant="contained"
-										color="primary"
-										startIcon={<EditIcon />}
-									>Editar</Button>
+									<div className='modal-buttons'>
+										<Button
+											type="submit"
+											disabled={readOnly}
+											variant="contained"
+											color="primary"
+											startIcon={<EditIcon />}
+										>Editar</Button>
+										<Button
+											disabled={readOnly}
+											variant="contained"
+											style={{background:'#FF0E0E', marginLeft: 10}}
+											startIcon={<DeleteIcon />}
+											onClick={async () => await MutationDeleteClient(data?._id || '')}
+										>Remover</Button>
+									</div>
+									
 								</form>
 							</>
 						)}

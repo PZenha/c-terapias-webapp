@@ -4,7 +4,6 @@ export interface IClient {
   dob?: Date
   email?: string
   phone?: string
-  gender: 'MALE' | 'FEMALE'
   address?: {
     city?: string
     zipcode?: string
@@ -22,7 +21,6 @@ export interface IUpdateClientInput {
   dob?: Date
   email?: string
   phone?: string
-  gender: 'MALE' | 'FEMALE'
   address?: {
     city?: string
     zipcode?: string
