@@ -13,14 +13,15 @@ interface IDeleteInput {
 
 export const DELETE_CLIENT = gql`
     mutation deleteClient($_id: ID){
-        deleteClient(_id: $_id){
-            deleteClient
-        }
+        deleteClient(_id: $_id)
     }
 `
 
 export async function MutationDeleteClient(_id: string){
 
+	if(!_id){
+		throw new Error('No id provided')
+	}
 	try{
 		const res = await ApolloClient.mutate<IDelete,IDeleteInput>({
 			mutation: DELETE_CLIENT,

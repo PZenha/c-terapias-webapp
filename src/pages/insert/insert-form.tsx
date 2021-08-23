@@ -31,7 +31,6 @@ const ClientForm: FC = () => {
 				<Formik
 					initialValues={{
 						name: '',
-						gender: 'MALE' as const,
 						dob: new Date(),
 						email: '',
 						phone: '',
