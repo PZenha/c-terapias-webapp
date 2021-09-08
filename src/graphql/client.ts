@@ -11,6 +11,7 @@ import { fromPromise, toPromise, Operation, NextLink } from 'apollo-link'
 import { getAccessToken } from '../store/authentication'
 import refreshTokens from '../graphql/mutations/refresh-tokens'
 import history from '../history'
+import { API_URL } from '../config'
 
 const defaultOptions: DefaultOptions = {
 	watchQuery: {
@@ -24,7 +25,7 @@ const defaultOptions: DefaultOptions = {
 }
 
 const httpLink = createHttpLink({
-	uri: 'http://127.0.0.1:5000/graphql'
+	uri: API_URL
 })
 
 const authLink = setContext((_, { headers }) => {
