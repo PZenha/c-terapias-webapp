@@ -42,12 +42,12 @@ const AuthRoute: FC<RouteProps & {
 const Routes = () => (
 	<Router history={history}>
 		<Switch>
-			<AuthRoute
+			{/* <AuthRoute
 				shielded
 				path="/home"
 				exact
 				component={require('../pages/home').default}
-			/>
+			/> */}
 			<AuthRoute
 				shielded
 				path="/clients"

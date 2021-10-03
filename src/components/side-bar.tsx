@@ -7,11 +7,11 @@ import EventIcon from '@material-ui/icons/Event'
 import '../App.css'
 
 const sideBarData = [
-	{
-		title: 'Página principal',
-		icon: <HomeIcon />,
-		link: '/home',
-	},
+	// {
+	// 	title: 'Página principal',
+	// 	icon: <HomeIcon />,
+	// 	link: '/home',
+	// },
 	{
 		title: 'Inserir',
 		icon: <AddIcon />,
